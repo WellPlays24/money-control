@@ -37,8 +37,9 @@ export default async function DashboardPage({
   const { accounts, transactions } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
   const activeBalances = balances.filter((account) => !account.archived);
+  const dashboardBalances = activeBalances.filter((account) => account.include_in_balance);
   const generalBalance = getGeneralBalance(
-    balances.filter((account) => !account.archived && account.include_in_balance),
+    dashboardBalances,
   );
   const monthly = getSummaryForMonth(transactions, selectedMonth, selectedYear);
   const availableYears = Array.from(
@@ -97,14 +98,11 @@ export default async function DashboardPage({
       </section>
       <section className="stack" style={{ marginTop: 16 }}>
         <div className="grid">
-          {activeBalances.map((account) => (
+          {dashboardBalances.map((account) => (
             <article className="card" key={account.id}>
               <p className="muted">{account.type}</p>
               <h2>{account.name}</h2>
               <p className="amount">{formatMoney(account.balance)}</p>
-              {!account.include_in_balance ? (
-                <p className="muted table-note">No suma al balance general</p>
-              ) : null}
             </article>
           ))}
         </div>
@@ -117,7 +115,7 @@ export default async function DashboardPage({
             </Link>
           </div>
         ) : null}
-        {activeBalances.length > 0 ? <AccountBalanceSelector accounts={activeBalances} /> : null}
+        {dashboardBalances.length > 0 ? <AccountBalanceSelector accounts={dashboardBalances} /> : null}
         <TransactionsSummaryTable accounts={accounts} transactions={transactions.slice(0, 8)} />
       </section>
     </main>
