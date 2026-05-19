@@ -1,8 +1,9 @@
 import { createCategory } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 
 export function CategoryForm({ className = "card form" }: { className?: string }) {
   return (
-    <form action={createCategory} className={className}>
+    <ActionForm action={createCategory} className={className} successMessage="Categoria creada correctamente.">
       <h2>Nueva categoria</h2>
       <div className="field">
         <label htmlFor="name">Nombre</label>
@@ -18,6 +19,6 @@ export function CategoryForm({ className = "card form" }: { className?: string }
       <button className="button" type="submit">
         Crear categoria
       </button>
-    </form>
+    </ActionForm>
   );
 }

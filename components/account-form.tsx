@@ -1,8 +1,9 @@
 import { createAccount } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 
 export function AccountForm({ className = "card form" }: { className?: string }) {
   return (
-    <form action={createAccount} className={className}>
+    <ActionForm action={createAccount} className={className} successMessage="Cuenta creada correctamente.">
       <h2>Nueva cuenta</h2>
       <div className="field">
         <label htmlFor="name">Nombre</label>
@@ -32,6 +33,6 @@ export function AccountForm({ className = "card form" }: { className?: string })
       <button className="button" type="submit">
         Crear cuenta
       </button>
-    </form>
+    </ActionForm>
   );
 }

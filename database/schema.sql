@@ -6,6 +6,7 @@ create table if not exists public.accounts (
   name text not null,
   type text not null check (type in ('bank', 'cooperative', 'cash', 'other')),
   initial_balance numeric(12, 2) not null default 0 check (initial_balance >= 0),
+  archived boolean not null default false,
   created_at timestamptz not null default now()
 );
 
@@ -21,8 +22,8 @@ create table if not exists public.transactions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   type text not null check (type in ('income', 'expense', 'transfer')),
-  account_id uuid not null references public.accounts(id) on delete cascade,
-  destination_account_id uuid references public.accounts(id) on delete cascade,
+  account_id uuid not null references public.accounts(id) on delete restrict,
+  destination_account_id uuid references public.accounts(id) on delete restrict,
   category text not null,
   amount numeric(12, 2) not null check (amount > 0),
   description text,
@@ -109,7 +110,22 @@ create policy "Users can update their transactions"
 on public.transactions for update
 to authenticated
 using (user_id = auth.uid())
-with check (user_id = auth.uid());
+with check (
+  user_id = auth.uid()
+  and exists (
+    select 1 from public.accounts
+    where accounts.id = transactions.account_id
+    and accounts.user_id = auth.uid()
+  )
+  and (
+    destination_account_id is null
+    or exists (
+      select 1 from public.accounts
+      where accounts.id = transactions.destination_account_id
+      and accounts.user_id = auth.uid()
+    )
+  )
+);
 
 create policy "Users can delete their transactions"
 on public.transactions for delete

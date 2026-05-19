@@ -40,7 +40,6 @@ export async function createAccount(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/accounts");
-  redirect("/accounts");
 }
 
 export async function updateAccount(formData: FormData) {
@@ -83,11 +82,25 @@ export async function deleteAccount(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   if (!id) throw new Error("No se encontro la cuenta.");
 
-  const { error } = await supabase
-    .from("accounts")
-    .delete()
-    .eq("id", id)
+  const { count, error: countError } = await supabase
+    .from("transactions")
+    .select("id", { count: "exact", head: true })
+    .or(`account_id.eq.${id},destination_account_id.eq.${id}`)
     .eq("user_id", data.user.id);
+
+  if (countError) throw new Error(countError.message);
+
+  const { error } = count && count > 0
+    ? await supabase
+        .from("accounts")
+        .update({ archived: true })
+        .eq("id", id)
+        .eq("user_id", data.user.id)
+    : await supabase
+        .from("accounts")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", data.user.id);
 
   if (error) throw new Error(error.message);
 
@@ -206,7 +219,6 @@ export async function createTransaction(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/transactions");
   revalidatePath("/reports");
-  redirect("/transactions");
 }
 
 export async function updateTransaction(formData: FormData) {

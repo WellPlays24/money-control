@@ -1,4 +1,5 @@
 import { deleteTransaction, updateTransaction } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 import { formatMoney } from "@/lib/finance";
 import type { Account, Category, Transaction } from "@/lib/types";
 
@@ -33,10 +34,15 @@ export function TransactionsTable({
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
               <td data-label="Fecha">
-                <form action={updateTransaction} className="inline-form" id={`tx-${transaction.id}`}>
+                <ActionForm
+                  action={updateTransaction}
+                  className="inline-form"
+                  id={`tx-${transaction.id}`}
+                  successMessage="Movimiento actualizado correctamente."
+                >
                   <input name="id" type="hidden" value={transaction.id} />
                   <input name="date" type="date" defaultValue={transaction.date} required />
-                </form>
+                </ActionForm>
               </td>
               <td data-label="Tipo">
                 <select name="type" defaultValue={transaction.type} form={`tx-${transaction.id}`}>
@@ -118,12 +124,16 @@ export function TransactionsTable({
                   <button className="small-button" form={`tx-${transaction.id}`} type="submit">
                     Guardar
                   </button>
-                  <form action={deleteTransaction}>
+                  <ActionForm
+                    action={deleteTransaction}
+                    confirmMessage="Esta accion no se puede deshacer. El movimiento se eliminara permanentemente. Deseas continuar?"
+                    successMessage="Movimiento eliminado correctamente."
+                  >
                     <input name="id" type="hidden" value={transaction.id} />
                     <button className="small-button danger-button" type="submit">
                       Eliminar
                     </button>
-                  </form>
+                  </ActionForm>
                 </div>
               </td>
             </tr>

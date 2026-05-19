@@ -29,6 +29,7 @@ export async function getAccounts(): Promise<Account[]> {
   return (data ?? []).map((account) => ({
     ...account,
     initial_balance: Number(account.initial_balance),
+    archived: Boolean(account.archived),
   })) as Account[];
 }
 
@@ -94,6 +95,7 @@ export async function getFinanceData() {
     accounts: (accountsResult.data ?? []).map((account) => ({
       ...account,
       initial_balance: Number(account.initial_balance),
+      archived: Boolean(account.archived),
     })) as Account[],
     transactions: (transactionsResult.data ?? []).map((transaction) => ({
       ...transaction,

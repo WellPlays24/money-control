@@ -1,4 +1,5 @@
 import { createTransaction } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 import { TransactionTypeCategoryFields } from "@/components/transaction-type-category-fields";
 import type { Account, Category } from "@/lib/types";
 
@@ -14,7 +15,7 @@ export function TransactionForm({
   className?: string;
 }) {
   return (
-    <form action={createTransaction} className={className}>
+    <ActionForm action={createTransaction} className={className} successMessage="Movimiento registrado correctamente.">
       <h2>Nuevo movimiento</h2>
       <div className="grid">
         <TransactionTypeCategoryFields categories={categories} />
@@ -60,6 +61,6 @@ export function TransactionForm({
       <button className="button" disabled={accounts.length === 0} type="submit">
         Registrar movimiento
       </button>
-    </form>
+    </ActionForm>
   );
 }

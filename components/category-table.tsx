@@ -1,4 +1,5 @@
 import { deleteCategory, updateCategory } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 import type { Category } from "@/lib/types";
 
 const typeLabels = {
@@ -22,10 +23,15 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
           {categories.map((category) => (
             <tr key={category.id}>
               <td data-label="Nombre">
-                <form action={updateCategory} className="inline-form" id={`category-${category.id}`}>
+                <ActionForm
+                  action={updateCategory}
+                  className="inline-form"
+                  id={`category-${category.id}`}
+                  successMessage="Categoria actualizada correctamente."
+                >
                   <input name="id" type="hidden" value={category.id} />
                   <input name="name" defaultValue={category.name} required />
-                </form>
+                </ActionForm>
               </td>
               <td data-label="Tipo">
                 <select name="type" defaultValue={category.type} form={`category-${category.id}`}>
@@ -39,12 +45,16 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
                   <button className="small-button" form={`category-${category.id}`} type="submit">
                     Guardar
                   </button>
-                  <form action={deleteCategory}>
+                  <ActionForm
+                    action={deleteCategory}
+                    confirmMessage="Esta accion no se puede deshacer. Los movimientos anteriores conservaran el texto de la categoria. Deseas continuar?"
+                    successMessage="Categoria eliminada correctamente."
+                  >
                     <input name="id" type="hidden" value={category.id} />
                     <button className="small-button danger-button" type="submit">
                       Eliminar
                     </button>
-                  </form>
+                  </ActionForm>
                 </div>
               </td>
             </tr>

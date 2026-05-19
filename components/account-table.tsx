@@ -1,4 +1,5 @@
 import { deleteAccount, updateAccount } from "@/app/actions";
+import { ActionForm } from "@/components/action-form";
 import { formatMoney } from "@/lib/finance";
 import type { AccountBalance } from "@/lib/types";
 
@@ -20,10 +21,15 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
           {accounts.map((account) => (
             <tr key={account.id}>
               <td data-label="Cuenta">
-                <form action={updateAccount} className="inline-form" id={`account-${account.id}`}>
+                <ActionForm
+                  action={updateAccount}
+                  className="inline-form"
+                  id={`account-${account.id}`}
+                  successMessage="Cuenta actualizada correctamente."
+                >
                   <input name="id" type="hidden" value={account.id} />
                   <input name="name" defaultValue={account.name} required />
-                </form>
+                </ActionForm>
               </td>
               <td data-label="Tipo">
                 <select name="type" defaultValue={account.type} form={`account-${account.id}`}>
@@ -50,12 +56,16 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
                   <button className="small-button" form={`account-${account.id}`} type="submit">
                     Guardar
                   </button>
-                  <form action={deleteAccount}>
+                  <ActionForm
+                    action={deleteAccount}
+                    confirmMessage="Esta accion no se puede deshacer. Si la cuenta tiene movimientos, se archivara para preservar el historial. Deseas continuar?"
+                    successMessage="Cuenta eliminada o archivada correctamente."
+                  >
                     <input name="id" type="hidden" value={account.id} />
                     <button className="small-button danger-button" type="submit">
                       Eliminar
                     </button>
-                  </form>
+                  </ActionForm>
                 </div>
               </td>
             </tr>
@@ -68,7 +78,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
         </tbody>
       </table>
       <p className="muted table-note">
-        Al eliminar una cuenta tambien se eliminan sus movimientos asociados.
+        Si una cuenta tiene movimientos, se archiva para preservar el historial.
       </p>
     </section>
   );

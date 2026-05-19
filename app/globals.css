@@ -126,6 +126,19 @@ textarea {
   margin-bottom: 16px;
 }
 
+.page-actions {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.export-action {
+  display: grid;
+  gap: 6px;
+}
+
 .page-heading .page-title {
   margin-bottom: 0;
 }
@@ -240,6 +253,18 @@ td select {
 
 .report-section {
   margin-top: 16px;
+}
+
+.filter-bar {
+  align-items: end;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 16px;
+}
+
+.clear-filter {
+  text-align: center;
 }
 
 .sr-only {
@@ -420,6 +445,23 @@ th {
   text-underline-offset: 3px;
 }
 
+.form-message {
+  border-radius: 14px;
+  font-size: 14px;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+}
+
+.error-message {
+  background: #ffe8e8;
+  color: var(--danger);
+}
+
+.success-message {
+  background: #e8f6ef;
+  color: var(--success);
+}
+
 @media (max-width: 720px) {
   .shell {
     padding: 16px;
@@ -466,6 +508,11 @@ th {
   .page-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .page-actions {
+    display: grid;
+    justify-content: stretch;
   }
 
   .add-button {

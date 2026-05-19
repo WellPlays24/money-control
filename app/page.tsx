@@ -2,13 +2,48 @@ import Link from "next/link";
 import { AppNav } from "@/components/app-nav";
 import { TransactionsTable } from "@/components/transactions-table";
 import { getFinanceData } from "@/lib/data";
-import { calculateBalances, formatMoney, getGeneralBalance, getMonthlySummary } from "@/lib/finance";
+import { calculateBalances, formatMoney, getGeneralBalance, getSummaryForMonth } from "@/lib/finance";
 
-export default async function DashboardPage() {
+const monthOptions = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+function getParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const now = new Date();
+  const selectedMonth = Number(getParam(params?.month)) || now.getMonth() + 1;
+  const selectedYear = Number(getParam(params?.year)) || now.getFullYear();
+
   const { accounts, transactions, categories } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
+  const activeBalances = balances.filter((account) => !account.archived);
   const generalBalance = getGeneralBalance(balances);
-  const monthly = getMonthlySummary(transactions);
+  const monthly = getSummaryForMonth(transactions, selectedMonth, selectedYear);
+  const availableYears = Array.from(
+    new Set([
+      now.getFullYear(),
+      ...transactions.map((transaction) => new Date(`${transaction.date}T00:00:00`).getFullYear()),
+    ]),
+  ).sort((a, b) => b - a);
 
   return (
     <main className="shell">
@@ -18,6 +53,31 @@ export default async function DashboardPage() {
         <h1>{formatMoney(generalBalance)}</h1>
         <p className="muted">Tu dinero actual sumando todas tus cuentas registradas.</p>
       </section>
+      <form className="card filter-bar">
+        <div className="field">
+          <label htmlFor="month">Mes</label>
+          <select id="month" name="month" defaultValue={selectedMonth}>
+            {monthOptions.map((month, index) => (
+              <option key={month} value={index + 1}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="field">
+          <label htmlFor="year">Año</label>
+          <select id="year" name="year" defaultValue={selectedYear}>
+            {availableYears.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button className="button" type="submit">
+          Aplicar
+        </button>
+      </form>
       <section className="grid">
         <article className="card stat">
           <p className="muted">Ingresos del mes</p>
@@ -34,7 +94,7 @@ export default async function DashboardPage() {
       </section>
       <section className="stack" style={{ marginTop: 16 }}>
         <div className="grid">
-          {balances.map((account) => (
+          {activeBalances.map((account) => (
             <article className="card" key={account.id}>
               <p className="muted">{account.type}</p>
               <h2>{account.name}</h2>

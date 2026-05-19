@@ -10,6 +10,7 @@ export type Account = {
   name: string;
   type: AccountType;
   initial_balance: number;
+  archived: boolean;
   created_at: string;
 };
 

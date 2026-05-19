@@ -7,6 +7,7 @@ import { calculateBalances } from "@/lib/finance";
 export default async function AccountsPage() {
   const { accounts, transactions } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
+  const activeBalances = balances.filter((account) => !account.archived);
 
   return (
     <main className="shell">
@@ -16,7 +17,7 @@ export default async function AccountsPage() {
         <AccountModal />
       </div>
       <div className="stack">
-        <AccountTable accounts={balances} />
+        <AccountTable accounts={activeBalances} />
       </div>
     </main>
   );
