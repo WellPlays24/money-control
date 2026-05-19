@@ -7,6 +7,7 @@ create table if not exists public.accounts (
   type text not null check (type in ('bank', 'cooperative', 'cash', 'other')),
   initial_balance numeric(12, 2) not null default 0 check (initial_balance >= 0),
   archived boolean not null default false,
+  include_in_balance boolean not null default true,
   created_at timestamptz not null default now()
 );
 

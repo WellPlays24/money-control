@@ -23,6 +23,7 @@ export async function createAccount(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const type = String(formData.get("type") ?? "other") as AccountType;
   const initialBalance = Number(String(formData.get("initial_balance") ?? "0").replace(",", "."));
+  const includeInBalance = formData.get("include_in_balance") === "on";
 
   if (!name) throw new Error("El nombre de la cuenta es obligatorio.");
   if (!Number.isFinite(initialBalance) || initialBalance < 0) {
@@ -34,6 +35,7 @@ export async function createAccount(formData: FormData) {
     name,
     type,
     initial_balance: initialBalance,
+    include_in_balance: includeInBalance,
   });
 
   if (error) throw new Error(error.message);
@@ -52,6 +54,7 @@ export async function updateAccount(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const type = String(formData.get("type") ?? "other") as AccountType;
   const initialBalance = Number(String(formData.get("initial_balance") ?? "0").replace(",", "."));
+  const includeInBalance = formData.get("include_in_balance") === "on";
 
   if (!id) throw new Error("No se encontro la cuenta.");
   if (!name) throw new Error("El nombre de la cuenta es obligatorio.");
@@ -61,7 +64,7 @@ export async function updateAccount(formData: FormData) {
 
   const { error } = await supabase
     .from("accounts")
-    .update({ name, type, initial_balance: initialBalance })
+    .update({ name, type, initial_balance: initialBalance, include_in_balance: includeInBalance })
     .eq("id", id)
     .eq("user_id", data.user.id);
 

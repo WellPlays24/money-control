@@ -30,6 +30,7 @@ export async function getAccounts(): Promise<Account[]> {
     ...account,
     initial_balance: Number(account.initial_balance),
     archived: Boolean(account.archived),
+    include_in_balance: account.include_in_balance !== false,
   })) as Account[];
 }
 
@@ -96,6 +97,7 @@ export async function getFinanceData() {
       ...account,
       initial_balance: Number(account.initial_balance),
       archived: Boolean(account.archived),
+      include_in_balance: account.include_in_balance !== false,
     })) as Account[],
     transactions: (transactionsResult.data ?? []).map((transaction) => ({
       ...transaction,

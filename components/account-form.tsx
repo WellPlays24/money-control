@@ -45,6 +45,14 @@ export function AccountForm({
           required
         />
       </div>
+      <label className="switch-field">
+        <input
+          name="include_in_balance"
+          type="checkbox"
+          defaultChecked={account?.include_in_balance ?? true}
+        />
+        <span>Sumar esta cuenta al balance general</span>
+      </label>
       <button className="button" type="submit">
         {account ? "Guardar cambios" : "Crear cuenta"}
       </button>

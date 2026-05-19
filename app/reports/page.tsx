@@ -91,7 +91,13 @@ export default async function ReportsPage({
       <section className="grid report-section">
         <article className="card stat">
           <p className="muted">Balance general</p>
-          <p className="amount">{formatMoney(getGeneralBalance(balances))}</p>
+          <p className="amount">
+            {formatMoney(
+              getGeneralBalance(
+                balances.filter((account) => !account.archived && account.include_in_balance),
+              ),
+            )}
+          </p>
         </article>
         <article className="card stat">
           <p className="muted">Ingresos</p>

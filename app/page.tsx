@@ -37,7 +37,9 @@ export default async function DashboardPage({
   const { accounts, transactions } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
   const activeBalances = balances.filter((account) => !account.archived);
-  const generalBalance = getGeneralBalance(balances);
+  const generalBalance = getGeneralBalance(
+    balances.filter((account) => !account.archived && account.include_in_balance),
+  );
   const monthly = getSummaryForMonth(transactions, selectedMonth, selectedYear);
   const availableYears = Array.from(
     new Set([
@@ -100,6 +102,9 @@ export default async function DashboardPage({
               <p className="muted">{account.type}</p>
               <h2>{account.name}</h2>
               <p className="amount">{formatMoney(account.balance)}</p>
+              {!account.include_in_balance ? (
+                <p className="muted table-note">No suma al balance general</p>
+              ) : null}
             </article>
           ))}
         </div>

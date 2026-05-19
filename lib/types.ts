@@ -11,6 +11,7 @@ export type Account = {
   type: AccountType;
   initial_balance: number;
   archived: boolean;
+  include_in_balance: boolean;
   created_at: string;
 };
 

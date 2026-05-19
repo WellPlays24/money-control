@@ -323,6 +323,22 @@ td select {
   font-size: 30px;
 }
 
+.switch-field {
+  align-items: center;
+  background: #fffef9;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.switch-field input {
+  height: 18px;
+  width: 18px;
+}
+
 .report-accordion {
   background: rgba(255, 250, 240, 0.86);
   border: 1px solid var(--line);

@@ -15,6 +15,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
             <th>Tipo</th>
             <th>Inicial</th>
             <th>Actual</th>
+            <th>Balance general</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -25,6 +26,9 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
               <td data-label="Tipo">{account.type}</td>
               <td data-label="Inicial">{formatMoney(account.initial_balance)}</td>
               <td data-label="Actual">{formatMoney(account.balance)}</td>
+              <td data-label="Balance general">
+                {account.include_in_balance ? "Si suma" : "No suma"}
+              </td>
               <td data-label="Acciones">
                 <div className="actions">
                   <AccountEditModal account={account} />
@@ -44,7 +48,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
           ))}
           {accounts.length === 0 ? (
             <tr>
-              <td colSpan={5}>Todavia no hay cuentas.</td>
+              <td colSpan={6}>Todavia no hay cuentas.</td>
             </tr>
           ) : null}
         </tbody>
