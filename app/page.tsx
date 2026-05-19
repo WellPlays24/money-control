@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountBalanceSelector } from "@/components/account-balance-selector";
 import { AppNav } from "@/components/app-nav";
 import { TransactionsSummaryTable } from "@/components/transactions-summary-table";
 import { getFinanceData } from "@/lib/data";
@@ -111,6 +112,7 @@ export default async function DashboardPage({
             </Link>
           </div>
         ) : null}
+        {activeBalances.length > 0 ? <AccountBalanceSelector accounts={activeBalances} /> : null}
         <TransactionsSummaryTable accounts={accounts} transactions={transactions.slice(0, 8)} />
       </section>
     </main>
