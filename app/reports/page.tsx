@@ -1,6 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { ExportCsvButton } from "@/components/export-csv-button";
 import { PrintReportButton } from "@/components/print-report-button";
+import { ReportSection } from "@/components/report-section";
 import { ReportsCharts } from "@/components/reports-charts";
 import { getFinanceData } from "@/lib/data";
 import {
@@ -116,131 +117,137 @@ export default async function ReportsPage({
           No hay movimientos para el rango seleccionado.
         </p>
       ) : null}
-      <ReportsCharts expenses={expenses} monthlyHistory={monthlyHistory} />
-      <section className="card table-wrap report-section">
-        <h2>Saldos por cuenta</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Cuenta</th>
-              <th>Saldo inicial</th>
-              <th>Ingresos</th>
-              <th>Egresos</th>
-              <th>Transferencias entrada</th>
-              <th>Transferencias salida</th>
-              <th>Saldo actual</th>
-            </tr>
-          </thead>
-          <tbody>
-            {balances.map((account) => (
-              <tr key={account.id}>
-                <td>{account.name}</td>
-                <td>{formatMoney(account.initial_balance)}</td>
-                <td>{formatMoney(account.income)}</td>
-                <td>{formatMoney(account.expense)}</td>
-                <td>{formatMoney(account.transfersIn)}</td>
-                <td>{formatMoney(account.transfersOut)}</td>
-                <td>{formatMoney(account.balance)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-      <section className="card table-wrap report-section">
-        <h2>Gastos por categoria</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Categoria</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((expense) => (
-              <tr key={expense.category}>
-                <td>{expense.category}</td>
-                <td>{formatMoney(expense.amount)}</td>
-              </tr>
-            ))}
-            {expenses.length === 0 ? (
+      <ReportSection defaultOpen title="Graficos">
+        <ReportsCharts expenses={expenses} monthlyHistory={monthlyHistory} />
+      </ReportSection>
+      <ReportSection title="Saldos por cuenta">
+        <section className="card table-wrap">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={2}>Todavia no hay egresos registrados.</td>
+                <th>Cuenta</th>
+                <th>Saldo inicial</th>
+                <th>Ingresos</th>
+                <th>Egresos</th>
+                <th>Transferencias entrada</th>
+                <th>Transferencias salida</th>
+                <th>Saldo actual</th>
               </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </section>
-      <section className="card table-wrap report-section">
-        <h2>Historial mensual</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Mes/Año</th>
-              <th>Ingresos</th>
-              <th>Egresos</th>
-              <th>Transferencias</th>
-              <th>Balance neto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {monthlyHistory.map((item) => (
-              <tr key={`${item.year}-${item.month}`}>
-                <td>{item.label}</td>
-                <td>{formatMoney(item.income)}</td>
-                <td>{formatMoney(item.expense)}</td>
-                <td>{formatMoney(item.transfers)}</td>
-                <td>{formatMoney(item.net)}</td>
-              </tr>
-            ))}
-            {monthlyHistory.length === 0 ? (
+            </thead>
+            <tbody>
+              {balances.map((account) => (
+                <tr key={account.id}>
+                  <td>{account.name}</td>
+                  <td>{formatMoney(account.initial_balance)}</td>
+                  <td>{formatMoney(account.income)}</td>
+                  <td>{formatMoney(account.expense)}</td>
+                  <td>{formatMoney(account.transfersIn)}</td>
+                  <td>{formatMoney(account.transfersOut)}</td>
+                  <td>{formatMoney(account.balance)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </ReportSection>
+      <ReportSection title="Gastos por categoria">
+        <section className="card table-wrap">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={5}>No hay historial mensual para mostrar.</td>
+                <th>Categoria</th>
+                <th>Total</th>
               </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </section>
-      <section className="card table-wrap report-section">
-        <h2>Movimientos para analisis</h2>
-        <p className="muted">
-          Puedes guardar este reporte como PDF y pedir a una IA que analice patrones, gastos altos y oportunidades de ahorro.
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Tipo</th>
-              <th>Cuenta origen</th>
-              <th>Cuenta destino</th>
-              <th>Categoria</th>
-              <th>Descripcion</th>
-              <th>Monto</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransactions.map((transaction) => (
-              <tr key={transaction.id}>
-                <td>{transaction.date}</td>
-                <td>{typeLabels[transaction.type]}</td>
-                <td>{accountNames.get(transaction.account_id) ?? "-"}</td>
-                <td>
-                  {transaction.destination_account_id
-                    ? accountNames.get(transaction.destination_account_id)
-                    : "-"}
-                </td>
-                <td>{transaction.category}</td>
-                <td>{transaction.description ?? "-"}</td>
-                <td>{formatMoney(transaction.amount)}</td>
-              </tr>
-            ))}
-            {filteredTransactions.length === 0 ? (
+            </thead>
+            <tbody>
+              {expenses.map((expense) => (
+                <tr key={expense.category}>
+                  <td>{expense.category}</td>
+                  <td>{formatMoney(expense.amount)}</td>
+                </tr>
+              ))}
+              {expenses.length === 0 ? (
+                <tr>
+                  <td colSpan={2}>Todavia no hay egresos registrados.</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </section>
+      </ReportSection>
+      <ReportSection title="Historial mensual">
+        <section className="card table-wrap">
+          <table>
+            <thead>
               <tr>
-                <td colSpan={7}>Todavia no hay movimientos registrados.</td>
+                <th>Mes/Año</th>
+                <th>Ingresos</th>
+                <th>Egresos</th>
+                <th>Transferencias</th>
+                <th>Balance neto</th>
               </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {monthlyHistory.map((item) => (
+                <tr key={`${item.year}-${item.month}`}>
+                  <td>{item.label}</td>
+                  <td>{formatMoney(item.income)}</td>
+                  <td>{formatMoney(item.expense)}</td>
+                  <td>{formatMoney(item.transfers)}</td>
+                  <td>{formatMoney(item.net)}</td>
+                </tr>
+              ))}
+              {monthlyHistory.length === 0 ? (
+                <tr>
+                  <td colSpan={5}>No hay historial mensual para mostrar.</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </section>
+      </ReportSection>
+      <ReportSection title="Movimientos para analisis">
+        <section className="card table-wrap">
+          <p className="muted">
+            Puedes guardar este reporte como PDF y pedir a una IA que analice patrones, gastos altos y oportunidades de ahorro.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Cuenta origen</th>
+                <th>Cuenta destino</th>
+                <th>Categoria</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTransactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>{transaction.date}</td>
+                  <td>{typeLabels[transaction.type]}</td>
+                  <td>{accountNames.get(transaction.account_id) ?? "-"}</td>
+                  <td>
+                    {transaction.destination_account_id
+                      ? accountNames.get(transaction.destination_account_id)
+                      : "-"}
+                  </td>
+                  <td>{transaction.category}</td>
+                  <td>{transaction.description ?? "-"}</td>
+                  <td>{formatMoney(transaction.amount)}</td>
+                </tr>
+              ))}
+              {filteredTransactions.length === 0 ? (
+                <tr>
+                  <td colSpan={7}>Todavia no hay movimientos registrados.</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </section>
+      </ReportSection>
     </main>
   );
 }

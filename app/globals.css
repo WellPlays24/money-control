@@ -281,6 +281,45 @@ td select {
   grid-column: 1 / -1;
 }
 
+.report-accordion {
+  background: rgba(255, 250, 240, 0.86);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 18px 70px rgba(68, 45, 18, 0.08);
+  overflow: hidden;
+}
+
+.report-accordion summary {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 800;
+  list-style: none;
+  padding: 18px 22px;
+}
+
+.report-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.report-accordion summary::after {
+  content: "+";
+  float: right;
+}
+
+.report-accordion[open] summary::after {
+  content: "-";
+}
+
+.report-accordion-content {
+  border-top: 1px solid var(--line);
+  padding: 16px;
+}
+
+.report-accordion-content > .card,
+.report-accordion-content > .charts-grid {
+  box-shadow: none;
+}
+
 .sr-only {
   height: 1px;
   left: -9999px;
@@ -340,6 +379,29 @@ td select {
     box-shadow: none;
     break-inside: avoid;
     padding: 12px;
+  }
+
+  .report-accordion {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .report-accordion summary {
+    border-bottom: 1px solid #cccccc;
+    display: block;
+    padding: 10px 0;
+  }
+
+  .report-accordion summary::after {
+    content: "";
+  }
+
+  .report-accordion-content {
+    border-top: 0;
+    display: block !important;
+    padding: 10px 0;
   }
 
   .amount {
