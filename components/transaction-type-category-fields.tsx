@@ -3,9 +3,22 @@
 import { useState } from "react";
 import type { Category, TransactionType } from "@/lib/types";
 
-export function TransactionTypeCategoryFields({ categories }: { categories: Category[] }) {
-  const [type, setType] = useState<TransactionType>("expense");
+export function TransactionTypeCategoryFields({
+  categories,
+  initialCategory = "",
+  initialType = "expense",
+}: {
+  categories: Category[];
+  initialCategory?: string;
+  initialType?: TransactionType;
+}) {
+  const [type, setType] = useState<TransactionType>(initialType);
+  const [category, setCategory] = useState(initialCategory);
   const visibleCategories = categories.filter((category) => category.type === type);
+  const showCurrentCategory =
+    type !== "transfer" &&
+    category &&
+    !visibleCategories.some((visibleCategory) => visibleCategory.name === category);
 
   return (
     <>
@@ -15,7 +28,11 @@ export function TransactionTypeCategoryFields({ categories }: { categories: Cate
           id="type"
           name="type"
           value={type}
-          onChange={(event) => setType(event.target.value as TransactionType)}
+          onChange={(event) => {
+            const nextType = event.target.value as TransactionType;
+            setType(nextType);
+            setCategory(nextType === "transfer" ? "Transferencia" : "");
+          }}
         >
           <option value="income">Ingreso</option>
           <option value="expense">Egreso</option>
@@ -24,7 +41,13 @@ export function TransactionTypeCategoryFields({ categories }: { categories: Cate
       </div>
       <div className="field">
         <label htmlFor="category">Categoria</label>
-        <select id="category" name="category" required value={type === "transfer" ? "Transferencia" : undefined}>
+        <select
+          id="category"
+          name="category"
+          required
+          value={type === "transfer" ? "Transferencia" : category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
           {type === "transfer" ? <option value="Transferencia">Transferencia</option> : null}
           {type !== "transfer" ? <option value="">Selecciona una categoria</option> : null}
           {type !== "transfer"
@@ -34,6 +57,7 @@ export function TransactionTypeCategoryFields({ categories }: { categories: Cate
                 </option>
               ))
             : null}
+          {showCurrentCategory ? <option value={category}>{category}</option> : null}
         </select>
       </div>
     </>

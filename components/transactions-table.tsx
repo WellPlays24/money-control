@@ -1,7 +1,14 @@
-import { deleteTransaction, updateTransaction } from "@/app/actions";
+import { deleteTransaction } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
+import { TransactionEditModal } from "@/components/transaction-edit-modal";
 import { formatMoney } from "@/lib/finance";
 import type { Account, Category, Transaction } from "@/lib/types";
+
+const typeLabels = {
+  income: "Ingreso",
+  expense: "Egreso",
+  transfer: "Transferencia",
+};
 
 export function TransactionsTable({
   accounts,
@@ -33,97 +40,24 @@ export function TransactionsTable({
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
-              <td data-label="Fecha">
-                <ActionForm
-                  action={updateTransaction}
-                  className="inline-form"
-                  id={`tx-${transaction.id}`}
-                  successMessage="Movimiento actualizado correctamente."
-                >
-                  <input name="id" type="hidden" value={transaction.id} />
-                  <input name="date" type="date" defaultValue={transaction.date} required />
-                </ActionForm>
-              </td>
-              <td data-label="Tipo">
-                <select name="type" defaultValue={transaction.type} form={`tx-${transaction.id}`}>
-                  <option value="income">Ingreso</option>
-                  <option value="expense">Egreso</option>
-                  <option value="transfer">Transferencia</option>
-                </select>
-              </td>
-              <td data-label="Cuenta">
-                <select
-                  name="account_id"
-                  defaultValue={transaction.account_id}
-                  form={`tx-${transaction.id}`}
-                  required
-                >
-                  {accounts.map((account) => (
-                    <option key={account.id} value={account.id}>
-                      {account.name}
-                    </option>
-                  ))}
-                </select>
-              </td>
+              <td data-label="Fecha">{transaction.date}</td>
+              <td data-label="Tipo">{typeLabels[transaction.type]}</td>
+              <td data-label="Cuenta">{accountNames.get(transaction.account_id) ?? "-"}</td>
               <td data-label="Destino">
-                <select
-                  name="destination_account_id"
-                  defaultValue={transaction.destination_account_id ?? ""}
-                  form={`tx-${transaction.id}`}
-                >
-                  <option value="">Sin destino</option>
-                  {accounts.map((account) => (
-                    <option key={account.id} value={account.id}>
-                      {account.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="sr-only">{accountNames.get(transaction.account_id) ?? "-"}</span>
+                {transaction.destination_account_id
+                  ? accountNames.get(transaction.destination_account_id) ?? "-"
+                  : "-"}
               </td>
-              <td data-label="Categoria">
-                <select
-                  name="category"
-                  defaultValue={transaction.category}
-                  form={`tx-${transaction.id}`}
-                  required
-                >
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                  <option value="Transferencia">Transferencia</option>
-                  {!categories.some((category) => category.name === transaction.category) &&
-                  transaction.category !== "Transferencia" ? (
-                    <option value={transaction.category}>{transaction.category}</option>
-                  ) : null}
-                </select>
-              </td>
-              <td data-label="Descripcion">
-                <input
-                  name="description"
-                  defaultValue={transaction.description ?? ""}
-                  form={`tx-${transaction.id}`}
-                  placeholder="Opcional"
-                />
-              </td>
-              <td data-label="Monto">
-                <input
-                  name="amount"
-                  min="0.01"
-                  step="0.01"
-                  type="number"
-                  defaultValue={transaction.amount}
-                  form={`tx-${transaction.id}`}
-                  required
-                />
-                <span className="muted current-amount">{formatMoney(transaction.amount)}</span>
-              </td>
+              <td data-label="Categoria">{transaction.category}</td>
+              <td data-label="Descripcion">{transaction.description ?? "-"}</td>
+              <td data-label="Monto">{formatMoney(transaction.amount)}</td>
               <td data-label="Acciones">
                 <div className="actions">
-                  <button className="small-button" form={`tx-${transaction.id}`} type="submit">
-                    Guardar
-                  </button>
+                  <TransactionEditModal
+                    accounts={accounts}
+                    categories={categories}
+                    transaction={transaction}
+                  />
                   <ActionForm
                     action={deleteTransaction}
                     confirmMessage="Esta accion no se puede deshacer. El movimiento se eliminara permanentemente. Deseas continuar?"
