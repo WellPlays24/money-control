@@ -1,17 +1,31 @@
 import { createAccount } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
+import type { Account } from "@/lib/types";
 
-export function AccountForm({ className = "card form" }: { className?: string }) {
+export function AccountForm({
+  account,
+  action = createAccount,
+  className = "card form",
+  successMessage = "Cuenta creada correctamente.",
+  title = "Nueva cuenta",
+}: {
+  account?: Account;
+  action?: (formData: FormData) => Promise<void>;
+  className?: string;
+  successMessage?: string;
+  title?: string;
+}) {
   return (
-    <ActionForm action={createAccount} className={className} successMessage="Cuenta creada correctamente.">
-      <h2>Nueva cuenta</h2>
+    <ActionForm action={action} className={className} successMessage={successMessage}>
+      <h2>{title}</h2>
+      {account ? <input name="id" type="hidden" value={account.id} /> : null}
       <div className="field">
         <label htmlFor="name">Nombre</label>
-        <input id="name" name="name" placeholder="Banco Pichincha" required />
+        <input id="name" name="name" placeholder="Banco Pichincha" defaultValue={account?.name} required />
       </div>
       <div className="field">
         <label htmlFor="type">Tipo</label>
-        <select id="type" name="type" defaultValue="bank">
+        <select id="type" name="type" defaultValue={account?.type ?? "bank"}>
           <option value="bank">Banco</option>
           <option value="cooperative">Cooperativa</option>
           <option value="cash">Efectivo</option>
@@ -27,11 +41,12 @@ export function AccountForm({ className = "card form" }: { className?: string })
           placeholder="20.00"
           step="0.01"
           type="number"
+          defaultValue={account?.initial_balance}
           required
         />
       </div>
       <button className="button" type="submit">
-        Crear cuenta
+        {account ? "Guardar cambios" : "Crear cuenta"}
       </button>
     </ActionForm>
   );

@@ -1,6 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { ExportCsvButton } from "@/components/export-csv-button";
 import { PrintReportButton } from "@/components/print-report-button";
+import { ReportsCharts } from "@/components/reports-charts";
 import { getFinanceData } from "@/lib/data";
 import {
   calculateBalances,
@@ -115,6 +116,7 @@ export default async function ReportsPage({
           No hay movimientos para el rango seleccionado.
         </p>
       ) : null}
+      <ReportsCharts expenses={expenses} monthlyHistory={monthlyHistory} />
       <section className="card table-wrap report-section">
         <h2>Saldos por cuenta</h2>
         <table>

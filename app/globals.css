@@ -267,6 +267,20 @@ td select {
   text-align: center;
 }
 
+.charts-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.chart-card {
+  min-height: 360px;
+}
+
+.wide-chart {
+  grid-column: 1 / -1;
+}
+
 .sr-only {
   height: 1px;
   left: -9999px;

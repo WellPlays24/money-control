@@ -1,5 +1,6 @@
-import { deleteAccount, updateAccount } from "@/app/actions";
+import { deleteAccount } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
+import { AccountEditModal } from "@/components/account-edit-modal";
 import { formatMoney } from "@/lib/finance";
 import type { AccountBalance } from "@/lib/types";
 
@@ -20,42 +21,13 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
         <tbody>
           {accounts.map((account) => (
             <tr key={account.id}>
-              <td data-label="Cuenta">
-                <ActionForm
-                  action={updateAccount}
-                  className="inline-form"
-                  id={`account-${account.id}`}
-                  successMessage="Cuenta actualizada correctamente."
-                >
-                  <input name="id" type="hidden" value={account.id} />
-                  <input name="name" defaultValue={account.name} required />
-                </ActionForm>
-              </td>
-              <td data-label="Tipo">
-                <select name="type" defaultValue={account.type} form={`account-${account.id}`}>
-                  <option value="bank">Banco</option>
-                  <option value="cooperative">Cooperativa</option>
-                  <option value="cash">Efectivo</option>
-                  <option value="other">Otro</option>
-                </select>
-              </td>
-              <td data-label="Inicial">
-                <input
-                  form={`account-${account.id}`}
-                  min="0"
-                  name="initial_balance"
-                  step="0.01"
-                  type="number"
-                  defaultValue={account.initial_balance}
-                  required
-                />
-              </td>
+              <td data-label="Cuenta">{account.name}</td>
+              <td data-label="Tipo">{account.type}</td>
+              <td data-label="Inicial">{formatMoney(account.initial_balance)}</td>
               <td data-label="Actual">{formatMoney(account.balance)}</td>
               <td data-label="Acciones">
                 <div className="actions">
-                  <button className="small-button" form={`account-${account.id}`} type="submit">
-                    Guardar
-                  </button>
+                  <AccountEditModal account={account} />
                   <ActionForm
                     action={deleteAccount}
                     confirmMessage="Esta accion no se puede deshacer. Si la cuenta tiene movimientos, se archivara para preservar el historial. Deseas continuar?"
