@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AppNav } from "@/components/app-nav";
-import { TransactionsTable } from "@/components/transactions-table";
+import { TransactionsSummaryTable } from "@/components/transactions-summary-table";
 import { getFinanceData } from "@/lib/data";
 import { calculateBalances, formatMoney, getGeneralBalance, getSummaryForMonth } from "@/lib/finance";
 
@@ -33,7 +33,7 @@ export default async function DashboardPage({
   const selectedMonth = Number(getParam(params?.month)) || now.getMonth() + 1;
   const selectedYear = Number(getParam(params?.year)) || now.getFullYear();
 
-  const { accounts, transactions, categories } = await getFinanceData();
+  const { accounts, transactions } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
   const activeBalances = balances.filter((account) => !account.archived);
   const generalBalance = getGeneralBalance(balances);
@@ -111,7 +111,7 @@ export default async function DashboardPage({
             </Link>
           </div>
         ) : null}
-        <TransactionsTable accounts={accounts} categories={categories} transactions={transactions.slice(0, 8)} />
+        <TransactionsSummaryTable accounts={accounts} transactions={transactions.slice(0, 8)} />
       </section>
     </main>
   );
