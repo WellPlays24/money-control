@@ -17,6 +17,16 @@ export default async function LoginPage() {
           </p>
         </div>
         <LoginButton />
+        <p className="developer-credit">
+          Desarrollado por: {" "}
+          <a
+            href="https://www.linkedin.com/in/wellington-castillo-medina-876577260/"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Ing. Wellington Castillo
+          </a>
+        </p>
       </section>
     </main>
   );

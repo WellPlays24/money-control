@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/app/actions";
+import { MobileMenu } from "@/components/mobile-menu";
 
 export function AppNav() {
   return (
@@ -7,7 +8,7 @@ export function AppNav() {
       <Link className="brand" href="/">
         MoneyControl
       </Link>
-      <div className="nav-links">
+      <MobileMenu>
         <Link href="/">Dashboard</Link>
         <Link href="/accounts">Cuentas</Link>
         <Link href="/transactions">Movimientos</Link>
@@ -18,7 +19,7 @@ export function AppNav() {
             Salir
           </button>
         </form>
-      </div>
+      </MobileMenu>
     </nav>
   );
 }
