@@ -43,6 +43,7 @@ export function TransactionEditModal({
               action={updateTransaction}
               categories={categories}
               className="form"
+              onSuccess={() => setOpen(false)}
               successMessage="Movimiento actualizado correctamente."
               title="Datos del movimiento"
               transaction={transaction}

@@ -28,7 +28,7 @@ export function CategoryModal() {
                 Cerrar
               </button>
             </div>
-            <CategoryForm className="form" />
+            <CategoryForm className="form" onSuccess={() => setOpen(false)} />
           </section>
         </div>
       ) : null}

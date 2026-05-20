@@ -40,7 +40,12 @@ export function TransactionModal({
                 Cerrar
               </button>
             </div>
-            <TransactionForm accounts={accounts} categories={categories} className="form" />
+            <TransactionForm
+              accounts={accounts}
+              categories={categories}
+              className="form"
+              onSuccess={() => setOpen(false)}
+            />
           </section>
         </div>
       ) : null}

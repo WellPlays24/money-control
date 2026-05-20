@@ -14,6 +14,7 @@ type ActionFormProps = {
   className?: string;
   confirmMessage?: string;
   id?: string;
+  onSuccess?: () => void;
   successMessage?: string;
 };
 
@@ -30,6 +31,7 @@ export function ActionForm({
   className,
   confirmMessage,
   id,
+  onSuccess,
   successMessage = "Accion completada correctamente.",
 }: ActionFormProps) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
@@ -68,7 +70,7 @@ export function ActionForm({
         text: state.success,
         icon: "success",
         confirmButtonColor: "#d7772f",
-      });
+      }).then(() => onSuccess?.());
     }
 
     if (state.error) {
@@ -79,7 +81,7 @@ export function ActionForm({
         confirmButtonColor: "#d7772f",
       });
     }
-  }, [state.error, state.success]);
+  }, [onSuccess, state.error, state.success]);
 
   return (
     <form action={formAction} className={className} id={id}>

@@ -6,17 +6,19 @@ export function AccountForm({
   account,
   action = createAccount,
   className = "card form",
+  onSuccess,
   successMessage = "Cuenta creada correctamente.",
   title = "Nueva cuenta",
 }: {
   account?: Account;
   action?: (formData: FormData) => Promise<void>;
   className?: string;
+  onSuccess?: () => void;
   successMessage?: string;
   title?: string;
 }) {
   return (
-    <ActionForm action={action} className={className} successMessage={successMessage}>
+    <ActionForm action={action} className={className} onSuccess={onSuccess} successMessage={successMessage}>
       <h2>{title}</h2>
       {account ? <input name="id" type="hidden" value={account.id} /> : null}
       <div className="field">

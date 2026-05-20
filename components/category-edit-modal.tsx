@@ -34,6 +34,7 @@ export function CategoryEditModal({ category }: { category: Category }) {
               action={updateCategory}
               category={category}
               className="form"
+              onSuccess={() => setOpen(false)}
               successMessage="Categoria actualizada correctamente."
               title="Datos de la categoria"
             />

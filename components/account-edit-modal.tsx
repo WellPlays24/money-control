@@ -34,6 +34,7 @@ export function AccountEditModal({ account }: { account: Account }) {
               account={account}
               action={updateAccount}
               className="form"
+              onSuccess={() => setOpen(false)}
               successMessage="Cuenta actualizada correctamente."
               title="Datos de la cuenta"
             />

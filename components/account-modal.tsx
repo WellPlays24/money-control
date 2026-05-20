@@ -28,7 +28,7 @@ export function AccountModal() {
                 Cerrar
               </button>
             </div>
-            <AccountForm className="form" />
+            <AccountForm className="form" onSuccess={() => setOpen(false)} />
           </section>
         </div>
       ) : null}

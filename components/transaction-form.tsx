@@ -10,6 +10,7 @@ export function TransactionForm({
   accounts,
   categories,
   className = "card form",
+  onSuccess,
   successMessage = "Movimiento registrado correctamente.",
   title = "Nuevo movimiento",
   transaction,
@@ -18,12 +19,13 @@ export function TransactionForm({
   accounts: Account[];
   categories: Category[];
   className?: string;
+  onSuccess?: () => void;
   successMessage?: string;
   title?: string;
   transaction?: Transaction;
 }) {
   return (
-    <ActionForm action={action} className={className} successMessage={successMessage}>
+    <ActionForm action={action} className={className} onSuccess={onSuccess} successMessage={successMessage}>
       <h2>{title}</h2>
       {transaction ? <input name="id" type="hidden" value={transaction.id} /> : null}
       <div className="grid">

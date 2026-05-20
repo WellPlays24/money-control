@@ -6,17 +6,19 @@ export function CategoryForm({
   action = createCategory,
   category,
   className = "card form",
+  onSuccess,
   successMessage = "Categoria creada correctamente.",
   title = "Nueva categoria",
 }: {
   action?: (formData: FormData) => Promise<void>;
   category?: Category;
   className?: string;
+  onSuccess?: () => void;
   successMessage?: string;
   title?: string;
 }) {
   return (
-    <ActionForm action={action} className={className} successMessage={successMessage}>
+    <ActionForm action={action} className={className} onSuccess={onSuccess} successMessage={successMessage}>
       <h2>{title}</h2>
       {category ? <input name="id" type="hidden" value={category.id} /> : null}
       <div className="field">
