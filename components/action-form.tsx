@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 type ActionState = {
   error?: string;
@@ -33,8 +34,21 @@ export function ActionForm({
 }: ActionFormProps) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     async (_, formData) => {
-      if (confirmMessage && !window.confirm(confirmMessage)) {
-        return { error: "Accion cancelada." };
+      if (confirmMessage) {
+        const result = await Swal.fire({
+          title: "Confirmar accion",
+          text: confirmMessage,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d7772f",
+          cancelButtonColor: "#68746d",
+          confirmButtonText: "Si, continuar",
+          cancelButtonText: "Cancelar",
+        });
+
+        if (!result.isConfirmed) {
+          return {};
+        }
       }
 
       try {
@@ -47,12 +61,30 @@ export function ActionForm({
     initialState,
   );
 
+  useEffect(() => {
+    if (state.success) {
+      void Swal.fire({
+        title: "Listo",
+        text: state.success,
+        icon: "success",
+        confirmButtonColor: "#d7772f",
+      });
+    }
+
+    if (state.error) {
+      void Swal.fire({
+        title: "No se pudo completar",
+        text: state.error,
+        icon: "error",
+        confirmButtonColor: "#d7772f",
+      });
+    }
+  }, [state.error, state.success]);
+
   return (
     <form action={formAction} className={className} id={id}>
       {children}
       <input name="_pending" type="hidden" value={pending ? "1" : "0"} />
-      {state.error ? <p className="form-message error-message">{state.error}</p> : null}
-      {state.success ? <p className="form-message success-message">{state.success}</p> : null}
     </form>
   );
 }
