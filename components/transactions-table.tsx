@@ -13,10 +13,12 @@ const typeLabels = {
 export function TransactionsTable({
   accounts,
   categories = [],
+  showDestination = true,
   transactions,
 }: {
   accounts: Account[];
   categories?: Category[];
+  showDestination?: boolean;
   transactions: Transaction[];
 }) {
   const accountNames = new Map(accounts.map((account) => [account.id, account.name]));
@@ -30,7 +32,7 @@ export function TransactionsTable({
             <th>Fecha</th>
             <th>Tipo</th>
             <th>Cuenta</th>
-            <th>Destino</th>
+            {showDestination ? <th>Destino</th> : null}
             <th>Categoria</th>
             <th>Descripcion</th>
             <th>Monto</th>
@@ -43,11 +45,13 @@ export function TransactionsTable({
               <td data-label="Fecha">{transaction.date}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>
               <td data-label="Cuenta">{accountNames.get(transaction.account_id) ?? "-"}</td>
-              <td data-label="Destino">
-                {transaction.destination_account_id
-                  ? accountNames.get(transaction.destination_account_id) ?? "-"
-                  : "-"}
-              </td>
+              {showDestination ? (
+                <td data-label="Destino">
+                  {transaction.destination_account_id
+                    ? accountNames.get(transaction.destination_account_id) ?? "-"
+                    : "-"}
+                </td>
+              ) : null}
               <td data-label="Categoria">{transaction.category}</td>
               <td data-label="Descripcion">{transaction.description ?? "-"}</td>
               <td data-label="Monto">{formatMoney(transaction.amount)}</td>
@@ -74,7 +78,7 @@ export function TransactionsTable({
           ))}
           {transactions.length === 0 ? (
             <tr>
-              <td colSpan={8}>Todavia no hay movimientos.</td>
+              <td colSpan={showDestination ? 8 : 7}>Todavia no hay movimientos.</td>
             </tr>
           ) : null}
         </tbody>
