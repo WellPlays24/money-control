@@ -378,6 +378,61 @@ td select {
   font-size: 20px;
 }
 
+.badge {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.account-type-badge,
+.included-badge,
+.active-badge {
+  background: rgba(10, 242, 199, 0.12);
+  border-color: rgba(10, 242, 199, 0.34);
+  color: var(--success);
+}
+
+.cooperative-badge {
+  background: rgba(139, 92, 246, 0.14);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #c4b5fd;
+}
+
+.cash-badge {
+  background: rgba(34, 211, 238, 0.12);
+  border-color: rgba(34, 211, 238, 0.34);
+  color: var(--accent-dark);
+}
+
+.other-badge,
+.excluded-badge,
+.archived-badge {
+  background: rgba(141, 166, 184, 0.12);
+  border-color: rgba(141, 166, 184, 0.28);
+  color: var(--muted);
+}
+
+.accounts-table .money-cell {
+  font-weight: 800;
+  text-align: right;
+}
+
+.accounts-table .actions {
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.accounts-table .actions form {
+  display: inline-flex;
+}
+
 .clear-filter {
   text-align: center;
 }
@@ -964,13 +1019,21 @@ th {
     width: 100%;
   }
 
-  .transactions-table .actions {
+  .transactions-table .actions,
+  .accounts-table .actions {
     justify-content: flex-start;
+  }
+
+  .accounts-table .money-cell {
+    text-align: left;
   }
 
   .transactions-table .actions,
   .transactions-table .actions form,
-  .transactions-table .icon-action-button {
+  .transactions-table .icon-action-button,
+  .accounts-table .actions,
+  .accounts-table .actions form,
+  .accounts-table .icon-action-button {
     width: auto;
   }
 }
