@@ -54,7 +54,9 @@ export function TransactionsTable({
               ) : null}
               <td className="category-cell" data-label="Categoria">{transaction.category}</td>
               <td className="description-cell" data-label="Descripcion">{transaction.description ?? "-"}</td>
-              <td className="amount-cell" data-label="Monto">{formatMoney(transaction.amount)}</td>
+              <td className={`amount-cell ${transaction.type}-amount`} data-label="Monto">
+                {formatMoney(transaction.amount)}
+              </td>
               <td className="actions-cell" data-label="Acciones">
                 <div className="actions">
                   <TransactionEditModal
@@ -68,8 +70,14 @@ export function TransactionsTable({
                     successMessage="Movimiento eliminado correctamente."
                   >
                     <input name="id" type="hidden" value={transaction.id} />
-                    <button className="small-button danger-button" type="submit">
-                      Eliminar
+                    <button aria-label="Eliminar movimiento" className="icon-action-button danger-icon-button" title="Eliminar" type="submit">
+                      <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
+                        <path d="M4 7h16" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M10 11v6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M14 11v6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M6 7l1 13h10l1-13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <path d="M9 7V4h6v3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                      </svg>
                     </button>
                   </ActionForm>
                 </div>

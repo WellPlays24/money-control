@@ -18,8 +18,11 @@ export function TransactionEditModal({
 
   return (
     <>
-      <button className="small-button" onClick={() => setOpen(true)} type="button">
-        Editar
+      <button aria-label="Editar movimiento" className="icon-action-button" onClick={() => setOpen(true)} title="Editar" type="button">
+        <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
+          <path d="M4 20h4l11-11-4-4L4 16v4Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+          <path d="m13 7 4 4" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+        </svg>
       </button>
       {open ? (
         <div className="modal-backdrop" role="presentation" onClick={() => setOpen(false)}>

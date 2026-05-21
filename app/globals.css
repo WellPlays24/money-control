@@ -349,6 +349,14 @@ td select {
   margin-bottom: 16px;
 }
 
+.transactions-filter-bar {
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+}
+
+.transactions-filter-bar .search-field {
+  grid-column: span 2;
+}
+
 .clear-filter {
   text-align: center;
 }
@@ -651,12 +659,59 @@ table {
 }
 
 .transactions-table .amount-cell {
+  font-weight: 800;
   text-align: right;
   width: 92px;
 }
 
 .transactions-table .actions-cell {
-  width: 120px;
+  width: 86px;
+}
+
+.income-amount {
+  color: var(--success);
+}
+
+.expense-amount {
+  color: var(--danger);
+}
+
+.transfer-amount {
+  color: var(--accent-dark);
+}
+
+.icon-action-button {
+  align-items: center;
+  background: rgba(10, 242, 199, 0.12);
+  border: 1px solid rgba(10, 242, 199, 0.34);
+  border-radius: 12px;
+  color: var(--success);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  padding: 0;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+  width: 36px;
+}
+
+.icon-action-button:hover {
+  background: rgba(10, 242, 199, 0.2);
+  border-color: rgba(10, 242, 199, 0.72);
+  box-shadow: 0 0 22px rgba(10, 242, 199, 0.18);
+  transform: translateY(-1px);
+}
+
+.danger-icon-button {
+  background: rgba(255, 77, 109, 0.12);
+  border-color: rgba(255, 77, 109, 0.34);
+  color: var(--danger);
+}
+
+.danger-icon-button:hover {
+  background: rgba(255, 77, 109, 0.2);
+  border-color: rgba(255, 77, 109, 0.72);
+  box-shadow: 0 0 22px rgba(255, 77, 109, 0.18);
 }
 
 td,

@@ -3,6 +3,7 @@ import { ExportCsvButton } from "@/components/export-csv-button";
 import { TransactionModal } from "@/components/transaction-modal";
 import { TransactionsTable } from "@/components/transactions-table";
 import { getFinanceData } from "@/lib/data";
+import type { TransactionType } from "@/lib/types";
 
 function getParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -14,15 +15,32 @@ export default async function TransactionsPage({
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
-  const view = getParam(params?.view) ?? "all";
+  const startDate = getParam(params?.start) || "";
+  const endDate = getParam(params?.end) || "";
+  const accountId = getParam(params?.account) || "";
+  const category = getParam(params?.category) || "";
+  const type = (getParam(params?.type) || "all") as TransactionType | "all";
+  const search = (getParam(params?.search) || "").trim();
   const { accounts, transactions, categories } = await getFinanceData();
   const activeAccounts = accounts.filter((account) => !account.archived);
-  const filteredTransactions = view === "regular"
-    ? transactions.filter((transaction) => transaction.type !== "transfer")
-    : view === "transfer"
-      ? transactions.filter((transaction) => transaction.type === "transfer")
-      : transactions;
-  const showDestination = view !== "regular";
+  const categoryOptions = Array.from(
+    new Set([...categories.map((item) => item.name), ...transactions.map((transaction) => transaction.category)]),
+  ).sort((a, b) => a.localeCompare(b));
+  const normalizedSearch = search.toLowerCase();
+  const filteredTransactions = transactions.filter((transaction) => {
+    if (startDate && transaction.date < startDate) return false;
+    if (endDate && transaction.date > endDate) return false;
+    if (accountId && transaction.account_id !== accountId && transaction.destination_account_id !== accountId) {
+      return false;
+    }
+    if (category && transaction.category !== category) return false;
+    if (type !== "all" && transaction.type !== type) return false;
+    if (normalizedSearch && !(transaction.description ?? "").toLowerCase().includes(normalizedSearch)) {
+      return false;
+    }
+    return true;
+  });
+  const showDestination = type === "all" || type === "transfer";
 
   return (
     <main className="shell">
@@ -39,17 +57,52 @@ export default async function TransactionsPage({
         </div>
       </div>
       <div className="stack">
-        <form className="card filter-bar">
+        <form className="card filter-bar transactions-filter-bar">
           <div className="field">
-            <label htmlFor="view">Mostrar</label>
-            <select id="view" name="view" defaultValue={view}>
+            <label htmlFor="start">Fecha inicio</label>
+            <input id="start" name="start" type="date" defaultValue={startDate} />
+          </div>
+          <div className="field">
+            <label htmlFor="end">Fecha fin</label>
+            <input id="end" name="end" type="date" defaultValue={endDate} />
+          </div>
+          <div className="field">
+            <label htmlFor="account">Cuenta</label>
+            <select id="account" name="account" defaultValue={accountId}>
+              <option value="">Todas</option>
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="category">Categoria</label>
+            <select id="category" name="category" defaultValue={category}>
+              <option value="">Todas</option>
+              {categoryOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="type">Tipo</label>
+            <select id="type" name="type" defaultValue={type}>
               <option value="all">Todos</option>
-              <option value="regular">Ingresos y egresos</option>
+              <option value="income">Ingresos</option>
+              <option value="expense">Egresos</option>
               <option value="transfer">Transferencias</option>
             </select>
           </div>
+          <div className="field search-field">
+            <label htmlFor="search">Descripcion</label>
+            <input id="search" name="search" placeholder="Buscar texto" type="search" defaultValue={search} />
+          </div>
           <button className="button" type="submit">
-            Aplicar filtro
+            Aplicar filtros
           </button>
           <a className="ghost-button clear-filter" href="/transactions">
             Limpiar filtro
