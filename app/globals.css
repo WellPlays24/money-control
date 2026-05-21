@@ -669,14 +669,14 @@ table {
 
 .transactions-table .category-cell {
   overflow-wrap: anywhere;
-  white-space: normal;
-  width: 110px;
+  white-space: nowrap;
+  width: 170px;
 }
 
 .transactions-table .description-cell {
   overflow-wrap: anywhere;
   white-space: normal;
-  width: 38%;
+  width: 30%;
 }
 
 .transactions-table .description-text {
