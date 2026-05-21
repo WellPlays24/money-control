@@ -638,10 +638,16 @@ table {
   width: 150px;
 }
 
+.transactions-table .category-cell {
+  overflow-wrap: anywhere;
+  white-space: normal;
+  width: 118px;
+}
+
 .transactions-table .description-cell {
   overflow-wrap: anywhere;
   white-space: normal;
-  width: 34%;
+  width: 32%;
 }
 
 .transactions-table .amount-cell {

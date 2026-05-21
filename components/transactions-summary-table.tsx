@@ -26,7 +26,7 @@ export function TransactionsSummaryTable({
             <th>Tipo</th>
             <th>Cuenta</th>
             <th>Destino</th>
-            <th>Categoria</th>
+            <th className="category-cell">Categoria</th>
             <th className="description-cell">Descripcion</th>
             <th className="amount-cell">Monto</th>
           </tr>
@@ -42,7 +42,7 @@ export function TransactionsSummaryTable({
                   ? accountNames.get(transaction.destination_account_id) ?? "-"
                   : "-"}
               </td>
-              <td data-label="Categoria">{transaction.category}</td>
+              <td className="category-cell" data-label="Categoria">{transaction.category}</td>
               <td className="description-cell" data-label="Descripcion">{transaction.description ?? "-"}</td>
               <td className="amount-cell" data-label="Monto">{formatMoney(transaction.amount)}</td>
             </tr>
