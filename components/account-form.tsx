@@ -23,7 +23,16 @@ export function AccountForm({
       {account ? <input name="id" type="hidden" value={account.id} /> : null}
       <div className="field">
         <label htmlFor="name">Nombre</label>
-        <input id="name" name="name" placeholder="Banco Pichincha" defaultValue={account?.name} required />
+        <input id="name" name="name" placeholder="Ahorro principal" defaultValue={account?.name} required />
+      </div>
+      <div className="field">
+        <label htmlFor="institution">Institucion financiera</label>
+        <input
+          id="institution"
+          name="institution"
+          placeholder="Pichincha, JEP, CB..."
+          defaultValue={account?.institution ?? ""}
+        />
       </div>
       <div className="field">
         <label htmlFor="type">Tipo</label>

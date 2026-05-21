@@ -4,6 +4,7 @@ create table if not exists public.accounts (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null,
+  institution text,
   type text not null check (type in ('bank', 'cooperative', 'cash', 'other')),
   initial_balance numeric(12, 2) not null default 0 check (initial_balance >= 0),
   archived boolean not null default false,

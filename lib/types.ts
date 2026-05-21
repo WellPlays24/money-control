@@ -8,6 +8,7 @@ export type Account = {
   id: string;
   user_id: string;
   name: string;
+  institution: string | null;
   type: AccountType;
   initial_balance: number;
   archived: boolean;

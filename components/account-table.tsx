@@ -23,6 +23,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
         <thead>
           <tr>
             <th>Cuenta</th>
+            <th>Institucion</th>
             <th>Tipo</th>
             <th className="money-cell">Inicial</th>
             <th className="money-cell">Actual</th>
@@ -37,6 +38,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
             return (
               <tr key={account.id}>
                 <td data-label="Cuenta">{account.name}</td>
+                <td data-label="Institucion">{account.institution || "-"}</td>
                 <td data-label="Tipo">
                   <span className={`badge account-type-badge ${account.type}-badge`}>
                     {accountTypeLabels[account.type]}
@@ -93,7 +95,7 @@ export function AccountTable({ accounts }: { accounts: AccountBalance[] }) {
           })}
           {accounts.length === 0 ? (
             <tr>
-              <td colSpan={7}>Todavia no hay cuentas.</td>
+              <td colSpan={8}>Todavia no hay cuentas.</td>
             </tr>
           ) : null}
         </tbody>

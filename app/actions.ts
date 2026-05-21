@@ -21,6 +21,7 @@ export async function createAccount(formData: FormData) {
   if (!data.user) redirect("/login");
 
   const name = String(formData.get("name") ?? "").trim();
+  const institution = String(formData.get("institution") ?? "").trim() || null;
   const type = String(formData.get("type") ?? "other") as AccountType;
   const initialBalance = Number(String(formData.get("initial_balance") ?? "0").replace(",", "."));
   const includeInBalance = formData.get("include_in_balance") === "on";
@@ -33,6 +34,7 @@ export async function createAccount(formData: FormData) {
   const { error } = await supabase.from("accounts").insert({
     user_id: data.user.id,
     name,
+    institution,
     type,
     initial_balance: initialBalance,
     include_in_balance: includeInBalance,
@@ -52,6 +54,7 @@ export async function updateAccount(formData: FormData) {
 
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
+  const institution = String(formData.get("institution") ?? "").trim() || null;
   const type = String(formData.get("type") ?? "other") as AccountType;
   const initialBalance = Number(String(formData.get("initial_balance") ?? "0").replace(",", "."));
   const includeInBalance = formData.get("include_in_balance") === "on";
@@ -64,7 +67,7 @@ export async function updateAccount(formData: FormData) {
 
   const { error } = await supabase
     .from("accounts")
-    .update({ name, type, initial_balance: initialBalance, include_in_balance: includeInBalance })
+    .update({ name, institution, type, initial_balance: initialBalance, include_in_balance: includeInBalance })
     .eq("id", id)
     .eq("user_id", data.user.id);
 
