@@ -1,4 +1,4 @@
-import { formatMoney } from "@/lib/finance";
+import { formatMoney, formatTransactionDateTime } from "@/lib/finance";
 import type { Account, Transaction } from "@/lib/types";
 
 const typeLabels = {
@@ -22,7 +22,7 @@ export function TransactionsSummaryTable({
       <table className="responsive-table">
         <thead>
           <tr>
-            <th>Fecha</th>
+            <th>Fecha y hora</th>
             <th>Tipo</th>
             <th>Cuenta</th>
             <th>Destino</th>
@@ -34,7 +34,7 @@ export function TransactionsSummaryTable({
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
-              <td data-label="Fecha">{transaction.date}</td>
+              <td data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>
               <td data-label="Cuenta">{accountNames.get(transaction.account_id) ?? "-"}</td>
               <td data-label="Destino">

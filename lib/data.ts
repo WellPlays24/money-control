@@ -43,6 +43,7 @@ export async function getTransactions(): Promise<Transaction[]> {
     .from("transactions")
     .select("*")
     .order("date", { ascending: false })
+    .order("time", { ascending: false })
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
@@ -80,6 +81,7 @@ export async function getFinanceData() {
       .from("transactions")
       .select("*")
       .order("date", { ascending: false })
+      .order("time", { ascending: false })
       .order("created_at", { ascending: false }),
     supabase
       .from("categories")

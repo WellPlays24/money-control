@@ -20,6 +20,10 @@ export function formatMoney(value: number) {
   }).format(value);
 }
 
+export function formatTransactionDateTime(transaction: Pick<Transaction, "date" | "time">) {
+  return `${transaction.date} ${transaction.time.slice(0, 5)}`;
+}
+
 export function calculateBalances(
   accounts: Account[],
   transactions: Transaction[],

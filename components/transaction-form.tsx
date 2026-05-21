@@ -3,7 +3,14 @@ import { ActionForm } from "@/components/action-form";
 import { TransactionTypeCategoryFields } from "@/components/transaction-type-category-fields";
 import type { Account, Category, Transaction } from "@/lib/types";
 
-const today = new Date().toISOString().slice(0, 10);
+function getToday() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getCurrentTime() {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+}
 
 export function TransactionForm({
   action = createTransaction,
@@ -36,7 +43,17 @@ export function TransactionForm({
         />
         <div className="field">
           <label htmlFor="date">Fecha</label>
-          <input id="date" name="date" type="date" defaultValue={transaction?.date ?? today} required />
+          <input id="date" name="date" type="date" defaultValue={transaction?.date ?? getToday()} required />
+        </div>
+        <div className="field">
+          <label htmlFor="time">Hora</label>
+          <input
+            id="time"
+            name="time"
+            type="time"
+            defaultValue={transaction?.time?.slice(0, 5) ?? getCurrentTime()}
+            required
+          />
         </div>
       </div>
       <div className="grid">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AccountBalanceSelector } from "@/components/account-balance-selector";
 import { AppNav } from "@/components/app-nav";
+import { TransactionModal } from "@/components/transaction-modal";
 import { TransactionsSummaryTable } from "@/components/transactions-summary-table";
 import { getFinanceData } from "@/lib/data";
 import { calculateBalances, formatMoney, getGeneralBalance, getSummaryForMonth } from "@/lib/finance";
@@ -34,9 +35,10 @@ export default async function DashboardPage({
   const selectedMonth = Number(getParam(params?.month)) || now.getMonth() + 1;
   const selectedYear = Number(getParam(params?.year)) || now.getFullYear();
 
-  const { accounts, transactions } = await getFinanceData();
+  const { accounts, categories, transactions } = await getFinanceData();
   const balances = calculateBalances(accounts, transactions);
   const activeBalances = balances.filter((account) => !account.archived);
+  const activeAccounts = accounts.filter((account) => !account.archived);
   const dashboardBalances = activeBalances.filter((account) => account.include_in_balance);
   const generalBalance = getGeneralBalance(
     dashboardBalances,
@@ -56,6 +58,9 @@ export default async function DashboardPage({
         <p className="muted">Balance general</p>
         <h1>{formatMoney(generalBalance)}</h1>
         <p className="muted">Tu dinero actual sumando todas tus cuentas registradas.</p>
+        <div style={{ marginTop: 16 }}>
+          <TransactionModal accounts={activeAccounts} categories={categories} />
+        </div>
       </section>
       <form className="card filter-bar">
         <div className="field">

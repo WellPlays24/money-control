@@ -1,7 +1,7 @@
 import { deleteTransaction } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
 import { TransactionEditModal } from "@/components/transaction-edit-modal";
-import { formatMoney } from "@/lib/finance";
+import { formatMoney, formatTransactionDateTime } from "@/lib/finance";
 import type { Account, Category, Transaction } from "@/lib/types";
 
 const typeLabels = {
@@ -29,7 +29,7 @@ export function TransactionsTable({
       <table className="responsive-table">
         <thead>
           <tr>
-            <th>Fecha</th>
+            <th>Fecha y hora</th>
             <th>Tipo</th>
             <th>Cuenta</th>
             {showDestination ? <th>Destino</th> : null}
@@ -42,7 +42,7 @@ export function TransactionsTable({
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
-              <td data-label="Fecha">{transaction.date}</td>
+              <td data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>
               <td data-label="Cuenta">{accountNames.get(transaction.account_id) ?? "-"}</td>
               {showDestination ? (

@@ -29,6 +29,7 @@ create table if not exists public.transactions (
   amount numeric(12, 2) not null check (amount > 0),
   description text,
   date date not null default current_date,
+  time time not null default current_time,
   created_at timestamptz not null default now(),
   constraint transfer_destination_required check (
     (type = 'transfer' and destination_account_id is not null and destination_account_id <> account_id)
@@ -137,5 +138,5 @@ create index if not exists accounts_user_id_idx on public.accounts(user_id);
 create index if not exists categories_user_id_type_idx on public.categories(user_id, type);
 create unique index if not exists categories_user_type_name_unique
 on public.categories(user_id, type, lower(name));
-create index if not exists transactions_user_id_date_idx on public.transactions(user_id, date desc);
+create index if not exists transactions_user_id_date_idx on public.transactions(user_id, date desc, time desc);
 create index if not exists transactions_account_id_idx on public.transactions(account_id);

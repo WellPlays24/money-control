@@ -195,6 +195,7 @@ export async function createTransaction(formData: FormData) {
   const category = String(formData.get("category") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
   const date = String(formData.get("date") ?? new Date().toISOString().slice(0, 10));
+  const time = String(formData.get("time") ?? new Date().toTimeString().slice(0, 5));
   const amount = parseAmount(formData.get("amount"));
 
   if (!accountId) throw new Error("Selecciona una cuenta.");
@@ -215,6 +216,7 @@ export async function createTransaction(formData: FormData) {
     amount,
     description,
     date,
+    time,
   });
 
   if (error) throw new Error(error.message);
@@ -237,6 +239,7 @@ export async function updateTransaction(formData: FormData) {
   const category = String(formData.get("category") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim() || null;
   const date = String(formData.get("date") ?? new Date().toISOString().slice(0, 10));
+  const time = String(formData.get("time") ?? new Date().toTimeString().slice(0, 5));
   const amount = parseAmount(formData.get("amount"));
 
   if (!id) throw new Error("No se encontro el movimiento.");
@@ -259,6 +262,7 @@ export async function updateTransaction(formData: FormData) {
       amount,
       description,
       date,
+      time,
     })
     .eq("id", id)
     .eq("user_id", data.user.id);

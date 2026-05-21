@@ -220,7 +220,7 @@ export default async function ReportsPage({
           <table>
             <thead>
               <tr>
-                <th>Fecha</th>
+                <th>Fecha y hora</th>
                 <th>Tipo</th>
                 <th>Cuenta origen</th>
                 <th>Cuenta destino</th>
@@ -232,7 +232,7 @@ export default async function ReportsPage({
             <tbody>
               {filteredTransactions.map((transaction) => (
                 <tr key={transaction.id}>
-                  <td>{transaction.date}</td>
+                  <td>{`${transaction.date} ${transaction.time.slice(0, 5)}`}</td>
                   <td>{typeLabels[transaction.type]}</td>
                   <td>{accountNames.get(transaction.account_id) ?? "-"}</td>
                   <td>

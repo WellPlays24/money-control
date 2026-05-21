@@ -25,6 +25,7 @@ export type Transaction = {
   amount: number;
   description: string | null;
   date: string;
+  time: string;
   created_at: string;
 };
 

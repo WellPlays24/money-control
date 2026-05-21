@@ -18,7 +18,7 @@ export function formatCsvDate() {
 export function buildTransactionsCsv(transactions: Transaction[], accounts: Account[]) {
   const accountNames = new Map(accounts.map((account) => [account.id, account.name]));
   const headers = [
-    "Fecha",
+    "Fecha y hora",
     "Tipo",
     "Cuenta origen",
     "Cuenta destino",
@@ -28,7 +28,7 @@ export function buildTransactionsCsv(transactions: Transaction[], accounts: Acco
   ];
 
   const rows = transactions.map((transaction) => [
-    transaction.date,
+    `${transaction.date} ${transaction.time.slice(0, 5)}`,
     typeLabels[transaction.type],
     accountNames.get(transaction.account_id) ?? "",
     transaction.destination_account_id ? accountNames.get(transaction.destination_account_id) ?? "" : "",
