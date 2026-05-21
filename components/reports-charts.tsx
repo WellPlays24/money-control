@@ -64,6 +64,26 @@ export function ReportsCharts({
           <p className="muted">No hay egresos para graficar.</p>
         )}
       </article>
+      <article className="card chart-card wide-chart">
+        <h2>Gastos por categoria en barras</h2>
+        {expenses.length > 0 ? (
+          <ResponsiveContainer height={320} width="100%">
+            <BarChart data={expenses} layout="vertical" margin={{ left: 18, right: 24 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" />
+              <YAxis dataKey="category" type="category" width={120} />
+              <Tooltip formatter={moneyTooltip} />
+              <Bar dataKey="amount" name="Gasto">
+                {expenses.map((entry, index) => (
+                  <Cell key={entry.category} fill={colors[index % colors.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="muted">No hay egresos para graficar.</p>
+        )}
+      </article>
       <article className="card chart-card">
         <h2>Ingresos vs egresos</h2>
         {monthlyData.length > 0 ? (
