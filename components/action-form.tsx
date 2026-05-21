@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 type ActionState = {
   error?: string;
+  key?: number;
   success?: string;
 };
 
@@ -55,9 +56,9 @@ export function ActionForm({
 
       try {
         await action(formData);
-        return { success: successMessage };
+        return { key: Date.now(), success: successMessage };
       } catch (error) {
-        return { error: getErrorMessage(error) };
+        return { error: getErrorMessage(error), key: Date.now() };
       }
     },
     initialState,
@@ -81,7 +82,7 @@ export function ActionForm({
         confirmButtonColor: "#d7772f",
       });
     }
-  }, [onSuccess, state.error, state.success]);
+  }, [onSuccess, state.error, state.key, state.success]);
 
   return (
     <form action={formAction} className={className} id={id}>

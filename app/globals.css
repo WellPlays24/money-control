@@ -418,6 +418,12 @@ td select {
   color: var(--muted);
 }
 
+.expense-badge {
+  background: rgba(255, 77, 109, 0.12);
+  border-color: rgba(255, 77, 109, 0.34);
+  color: var(--danger);
+}
+
 .accounts-table .money-cell {
   font-weight: 800;
   text-align: right;
@@ -429,8 +435,27 @@ td select {
   justify-content: flex-end;
 }
 
-.accounts-table .actions form {
+.accounts-table .actions form,
+.categories-table .actions form {
   display: inline-flex;
+}
+
+.categories-filter-bar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.categories-filter-bar .filter-action {
+  align-items: center;
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  width: 100%;
+}
+
+.categories-table .actions {
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 .clear-filter {
@@ -951,6 +976,7 @@ th {
   }
 
   .transactions-filter-bar,
+  .categories-filter-bar,
   .transactions-summary-strip {
     grid-template-columns: 1fr;
   }
@@ -1020,7 +1046,8 @@ th {
   }
 
   .transactions-table .actions,
-  .accounts-table .actions {
+  .accounts-table .actions,
+  .categories-table .actions {
     justify-content: flex-start;
   }
 
@@ -1033,7 +1060,10 @@ th {
   .transactions-table .icon-action-button,
   .accounts-table .actions,
   .accounts-table .actions form,
-  .accounts-table .icon-action-button {
+  .accounts-table .icon-action-button,
+  .categories-table .actions,
+  .categories-table .actions form,
+  .categories-table .icon-action-button {
     width: auto;
   }
 }

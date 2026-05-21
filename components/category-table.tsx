@@ -12,7 +12,7 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
   return (
     <section className="card table-wrap">
       <h2>Categorias</h2>
-      <table className="responsive-table">
+      <table className="responsive-table categories-table">
         <thead>
           <tr>
             <th>Nombre</th>
@@ -24,7 +24,11 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
           {categories.map((category) => (
             <tr key={category.id}>
               <td data-label="Nombre">{category.name}</td>
-              <td data-label="Tipo">{typeLabels[category.type]}</td>
+              <td data-label="Tipo">
+                <span className={category.type === "income" ? "badge included-badge" : "badge expense-badge"}>
+                  {typeLabels[category.type]}
+                </span>
+              </td>
               <td data-label="Acciones">
                 <div className="actions">
                   <CategoryEditModal category={category} />
@@ -34,8 +38,14 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
                     successMessage="Categoria eliminada correctamente."
                   >
                     <input name="id" type="hidden" value={category.id} />
-                    <button className="small-button danger-button" type="submit">
-                      Eliminar
+                    <button aria-label="Eliminar categoria" className="icon-action-button danger-icon-button" title="Eliminar" type="submit">
+                      <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
+                        <path d="M4 7h16" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M10 11v6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M14 11v6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+                        <path d="M6 7l1 13h10l1-13" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <path d="M9 7V4h6v3" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                      </svg>
                     </button>
                   </ActionForm>
                 </div>
@@ -50,7 +60,7 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
         </tbody>
       </table>
       <p className="muted table-note">
-        Si eliminas una categoria, los movimientos anteriores conservan el texto registrado.
+        Al eliminar una categoria, los movimientos anteriores conservan el texto registrado.
       </p>
     </section>
   );
