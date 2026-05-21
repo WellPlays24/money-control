@@ -53,7 +53,9 @@ export function TransactionsTable({
                 </td>
               ) : null}
               <td className="category-cell" data-label="Categoria">{transaction.category}</td>
-              <td className="description-cell" data-label="Descripcion">{transaction.description ?? "-"}</td>
+              <td className="description-cell" data-label="Descripcion">
+                <span className="description-text">{transaction.description ?? "-"}</span>
+              </td>
               <td className={`amount-cell ${transaction.type}-amount`} data-label="Monto">
                 {formatMoney(transaction.amount)}
               </td>

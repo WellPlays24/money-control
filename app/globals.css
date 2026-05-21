@@ -350,11 +350,32 @@ td select {
 }
 
 .transactions-filter-bar {
-  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.transactions-filter-bar .search-field {
-  grid-column: span 2;
+.transactions-filter-bar .filter-action {
+  align-items: center;
+  display: inline-flex;
+  height: 48px;
+  justify-content: center;
+  width: 100%;
+}
+
+.transactions-summary-strip {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: -6px;
+  padding: 18px 20px;
+}
+
+.transactions-summary-strip div {
+  display: grid;
+  gap: 6px;
+}
+
+.transactions-summary-strip strong {
+  font-size: 20px;
 }
 
 .clear-filter {
@@ -643,29 +664,47 @@ table {
 }
 
 .transactions-table .date-cell {
-  width: 150px;
+  width: 145px;
 }
 
 .transactions-table .category-cell {
   overflow-wrap: anywhere;
   white-space: normal;
-  width: 118px;
+  width: 110px;
 }
 
 .transactions-table .description-cell {
   overflow-wrap: anywhere;
   white-space: normal;
-  width: 32%;
+  width: 38%;
+}
+
+.transactions-table .description-text {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  line-height: 1.35;
+  overflow: hidden;
 }
 
 .transactions-table .amount-cell {
   font-weight: 800;
   text-align: right;
-  width: 92px;
+  width: 96px;
 }
 
 .transactions-table .actions-cell {
-  width: 86px;
+  width: 88px;
+}
+
+.transactions-table .actions {
+  flex-wrap: nowrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.transactions-table .actions form {
+  display: inline-flex;
 }
 
 .income-amount {
@@ -688,11 +727,11 @@ table {
   color: var(--success);
   cursor: pointer;
   display: inline-flex;
-  height: 36px;
+  height: 32px;
   justify-content: center;
   padding: 0;
   transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-  width: 36px;
+  width: 32px;
 }
 
 .icon-action-button:hover {
@@ -856,6 +895,11 @@ th {
     width: 100%;
   }
 
+  .transactions-filter-bar,
+  .transactions-summary-strip {
+    grid-template-columns: 1fr;
+  }
+
   .hero,
   .card,
   .modal-card {
@@ -918,5 +962,15 @@ th {
   .actions form,
   .small-button {
     width: 100%;
+  }
+
+  .transactions-table .actions {
+    justify-content: flex-start;
+  }
+
+  .transactions-table .actions,
+  .transactions-table .actions form,
+  .transactions-table .icon-action-button {
+    width: auto;
   }
 }

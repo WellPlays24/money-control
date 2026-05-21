@@ -3,7 +3,10 @@ import { ExportCsvButton } from "@/components/export-csv-button";
 import { TransactionModal } from "@/components/transaction-modal";
 import { TransactionsTable } from "@/components/transactions-table";
 import { getFinanceData } from "@/lib/data";
+import { formatMoney, getTransactionSummary } from "@/lib/finance";
 import type { TransactionType } from "@/lib/types";
+
+const transactionTypes = ["income", "expense", "transfer"];
 
 function getParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -19,7 +22,8 @@ export default async function TransactionsPage({
   const endDate = getParam(params?.end) || "";
   const accountId = getParam(params?.account) || "";
   const category = getParam(params?.category) || "";
-  const type = (getParam(params?.type) || "all") as TransactionType | "all";
+  const requestedType = getParam(params?.type) || "all";
+  const type = transactionTypes.includes(requestedType) ? requestedType as TransactionType : "all";
   const search = (getParam(params?.search) || "").trim();
   const { accounts, transactions, categories } = await getFinanceData();
   const activeAccounts = accounts.filter((account) => !account.archived);
@@ -40,6 +44,7 @@ export default async function TransactionsPage({
     }
     return true;
   });
+  const filteredSummary = getTransactionSummary(filteredTransactions);
   const showDestination = type === "all" || type === "transfer";
 
   return (
@@ -97,17 +102,37 @@ export default async function TransactionsPage({
               <option value="transfer">Transferencias</option>
             </select>
           </div>
-          <div className="field search-field">
+          <div className="field">
             <label htmlFor="search">Descripcion</label>
             <input id="search" name="search" placeholder="Buscar texto" type="search" defaultValue={search} />
           </div>
-          <button className="button" type="submit">
+          <button className="button filter-action" type="submit">
             Aplicar filtros
           </button>
-          <a className="ghost-button clear-filter" href="/transactions">
-            Limpiar filtro
+          <a className="ghost-button clear-filter filter-action" href="/transactions">
+            Limpiar filtros
           </a>
         </form>
+        <section className="card transactions-summary-strip" aria-label="Resumen de resultados filtrados">
+          <div>
+            <span className="muted">Resultados</span>
+            <strong>{filteredTransactions.length} movimientos</strong>
+          </div>
+          <div>
+            <span className="muted">Ingresos</span>
+            <strong className="positive">{formatMoney(filteredSummary.income)}</strong>
+          </div>
+          <div>
+            <span className="muted">Egresos</span>
+            <strong className="negative">{formatMoney(filteredSummary.expense)}</strong>
+          </div>
+          <div>
+            <span className="muted">Balance</span>
+            <strong className={filteredSummary.net >= 0 ? "positive" : "negative"}>
+              {formatMoney(filteredSummary.net)}
+            </strong>
+          </div>
+        </section>
         {activeAccounts.length === 0 ? (
           <div className="card">
             <h2>Crea al menos una cuenta</h2>
