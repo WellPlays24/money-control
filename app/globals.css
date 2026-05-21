@@ -535,6 +535,29 @@ table {
   width: 100%;
 }
 
+.transactions-table {
+  table-layout: fixed;
+}
+
+.transactions-table .date-cell {
+  width: 150px;
+}
+
+.transactions-table .description-cell {
+  overflow-wrap: anywhere;
+  white-space: normal;
+  width: 34%;
+}
+
+.transactions-table .amount-cell {
+  text-align: right;
+  width: 92px;
+}
+
+.transactions-table .actions-cell {
+  width: 120px;
+}
+
 td,
 th {
   border-bottom: 1px solid var(--line);
@@ -699,6 +722,14 @@ th {
     gap: 6px;
     padding: 8px 0;
     white-space: normal;
+  }
+
+  .transactions-table .date-cell,
+  .transactions-table .description-cell,
+  .transactions-table .amount-cell,
+  .transactions-table .actions-cell {
+    text-align: left;
+    width: auto;
   }
 
   .responsive-table td::before {

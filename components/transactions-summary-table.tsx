@@ -19,22 +19,22 @@ export function TransactionsSummaryTable({
   return (
     <div className="card table-wrap">
       <h2>Resumen de movimientos</h2>
-      <table className="responsive-table">
+      <table className="responsive-table transactions-table">
         <thead>
           <tr>
-            <th>Fecha y hora</th>
+            <th className="date-cell">Fecha y hora</th>
             <th>Tipo</th>
             <th>Cuenta</th>
             <th>Destino</th>
             <th>Categoria</th>
-            <th>Descripcion</th>
-            <th>Monto</th>
+            <th className="description-cell">Descripcion</th>
+            <th className="amount-cell">Monto</th>
           </tr>
         </thead>
         <tbody>
           {transactions.map((transaction) => (
             <tr key={transaction.id}>
-              <td data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
+              <td className="date-cell" data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>
               <td data-label="Cuenta">{accountNames.get(transaction.account_id) ?? "-"}</td>
               <td data-label="Destino">
@@ -43,8 +43,8 @@ export function TransactionsSummaryTable({
                   : "-"}
               </td>
               <td data-label="Categoria">{transaction.category}</td>
-              <td data-label="Descripcion">{transaction.description ?? "-"}</td>
-              <td data-label="Monto">{formatMoney(transaction.amount)}</td>
+              <td className="description-cell" data-label="Descripcion">{transaction.description ?? "-"}</td>
+              <td className="amount-cell" data-label="Monto">{formatMoney(transaction.amount)}</td>
             </tr>
           ))}
           {transactions.length === 0 ? (
