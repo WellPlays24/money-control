@@ -444,12 +444,47 @@ td select {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.categories-filter-bar .filter-action {
+.report-filter-bar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.categories-filter-bar .filter-action,
+.report-filter-bar .button,
+.report-filter-bar .ghost-button {
   align-items: center;
   display: inline-flex;
   height: 48px;
   justify-content: center;
   width: 100%;
+}
+
+.report-analysis-card {
+  display: grid;
+  gap: 16px;
+}
+
+.report-analysis-header {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.report-analysis-header h2,
+.report-analysis-header p {
+  margin: 0;
+}
+
+.analysis-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.report-table .amount-cell {
+  font-weight: 800;
+  text-align: right;
 }
 
 .categories-table .actions {
@@ -977,6 +1012,7 @@ th {
 
   .transactions-filter-bar,
   .categories-filter-bar,
+  .report-filter-bar,
   .transactions-summary-strip {
     grid-template-columns: 1fr;
   }
@@ -1052,6 +1088,10 @@ th {
   }
 
   .accounts-table .money-cell {
+    text-align: left;
+  }
+
+  .report-table .amount-cell {
     text-align: left;
   }
 
