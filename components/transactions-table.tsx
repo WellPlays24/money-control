@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import { deleteTransaction } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
 import { TransactionEditModal } from "@/components/transaction-edit-modal";
@@ -10,6 +13,28 @@ const typeLabels = {
   transfer: "Transferencia",
 };
 
+type SortDirection = "asc" | "desc";
+type TransactionSortKey = "date" | "type" | "account" | "destination" | "category" | "description" | "amount";
+
+function SortButton({
+  active,
+  children,
+  direction,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  direction: SortDirection;
+  onClick: () => void;
+}) {
+  return (
+    <button className="sortable-header" onClick={onClick} type="button">
+      <span>{children}</span>
+      <span className="sort-indicator">{active ? (direction === "asc" ? "^" : "v") : "-"}</span>
+    </button>
+  );
+}
+
 export function TransactionsTable({
   accounts,
   categories = [],
@@ -21,7 +46,37 @@ export function TransactionsTable({
   showDestination?: boolean;
   transactions: Transaction[];
 }) {
-  const accountNames = new Map(accounts.map((account) => [account.id, account.name]));
+  const accountNames = useMemo(() => new Map(accounts.map((account) => [account.id, account.name])), [accounts]);
+  const [sort, setSort] = useState<{ key: TransactionSortKey; direction: SortDirection }>({
+    key: "date",
+    direction: "desc",
+  });
+  const sortedTransactions = useMemo(() => {
+    return transactions.slice().sort((a, b) => {
+      const getValue = (transaction: Transaction) => {
+        if (sort.key === "date") return `${transaction.date} ${transaction.time}`;
+        if (sort.key === "type") return typeLabels[transaction.type];
+        if (sort.key === "account") return accountNames.get(transaction.account_id) ?? "";
+        if (sort.key === "destination") return transaction.destination_account_id ? accountNames.get(transaction.destination_account_id) ?? "" : "";
+        if (sort.key === "category") return transaction.category;
+        if (sort.key === "description") return transaction.description ?? "";
+        return transaction.amount;
+      };
+      const first = getValue(a);
+      const second = getValue(b);
+      const result = typeof first === "number" && typeof second === "number"
+        ? first - second
+        : String(first).localeCompare(String(second));
+      return sort.direction === "asc" ? result : -result;
+    });
+  }, [accountNames, sort.direction, sort.key, transactions]);
+
+  function updateSort(key: TransactionSortKey) {
+    setSort((current) => ({
+      key,
+      direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
+    }));
+  }
 
   return (
     <div className="card table-wrap">
@@ -29,18 +84,18 @@ export function TransactionsTable({
       <table className="responsive-table transactions-table">
         <thead>
           <tr>
-            <th className="date-cell">Fecha y hora</th>
-            <th>Tipo</th>
-            <th>Cuenta</th>
-            {showDestination ? <th>Destino</th> : null}
-            <th className="category-cell">Categoria</th>
-            <th className="description-cell">Descripcion</th>
-            <th className="amount-cell">Monto</th>
+            <th className="date-cell"><SortButton active={sort.key === "date"} direction={sort.direction} onClick={() => updateSort("date")}>Fecha y hora</SortButton></th>
+            <th><SortButton active={sort.key === "type"} direction={sort.direction} onClick={() => updateSort("type")}>Tipo</SortButton></th>
+            <th><SortButton active={sort.key === "account"} direction={sort.direction} onClick={() => updateSort("account")}>Cuenta</SortButton></th>
+            {showDestination ? <th><SortButton active={sort.key === "destination"} direction={sort.direction} onClick={() => updateSort("destination")}>Destino</SortButton></th> : null}
+            <th className="category-cell"><SortButton active={sort.key === "category"} direction={sort.direction} onClick={() => updateSort("category")}>Categoria</SortButton></th>
+            <th className="description-cell"><SortButton active={sort.key === "description"} direction={sort.direction} onClick={() => updateSort("description")}>Descripcion</SortButton></th>
+            <th className="amount-cell"><SortButton active={sort.key === "amount"} direction={sort.direction} onClick={() => updateSort("amount")}>Monto</SortButton></th>
             <th className="actions-cell">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction) => (
+          {sortedTransactions.map((transaction) => (
             <tr key={transaction.id}>
               <td className="date-cell" data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>

@@ -509,6 +509,32 @@ td select {
   min-width: 0;
 }
 
+.chart-card-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.chart-card-header h2,
+.chart-card-header p {
+  margin: 0;
+}
+
+.compact-switch {
+  flex: 0 0 auto;
+  padding: 10px 12px;
+}
+
+.compact-switch span {
+  white-space: nowrap;
+}
+
+.accounts-chart-card {
+  min-height: 440px;
+}
+
 .wide-chart {
   grid-column: 1 / -1;
 }
@@ -894,6 +920,31 @@ th {
   text-transform: uppercase;
 }
 
+.sortable-header {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: 6px;
+  letter-spacing: inherit;
+  padding: 0;
+  text-align: inherit;
+  text-transform: inherit;
+}
+
+.sortable-header:hover {
+  color: var(--accent-dark);
+}
+
+.sort-indicator {
+  color: var(--accent-dark);
+  font-size: 11px;
+  min-width: 8px;
+}
+
 .stack {
   display: grid;
   gap: 16px;
@@ -995,6 +1046,11 @@ th {
   .page-actions {
     display: grid;
     justify-content: stretch;
+  }
+
+  .chart-card-header {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .add-button {

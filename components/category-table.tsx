@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import { deleteCategory } from "@/app/actions";
 import { ActionForm } from "@/components/action-form";
 import { CategoryEditModal } from "@/components/category-edit-modal";
@@ -8,20 +11,62 @@ const typeLabels = {
   expense: "Egreso",
 };
 
+type SortDirection = "asc" | "desc";
+type CategorySortKey = "name" | "type";
+
+function SortButton({
+  active,
+  children,
+  direction,
+  onClick,
+}: {
+  active: boolean;
+  children: React.ReactNode;
+  direction: SortDirection;
+  onClick: () => void;
+}) {
+  return (
+    <button className="sortable-header" onClick={onClick} type="button">
+      <span>{children}</span>
+      <span className="sort-indicator">{active ? (direction === "asc" ? "^" : "v") : "-"}</span>
+    </button>
+  );
+}
+
 export function CategoryTable({ categories }: { categories: Category[] }) {
+  const [sort, setSort] = useState<{ key: CategorySortKey; direction: SortDirection }>({
+    key: "name",
+    direction: "asc",
+  });
+  const sortedCategories = useMemo(() => {
+    return categories.slice().sort((a, b) => {
+      const first = sort.key === "name" ? a.name : typeLabels[a.type];
+      const second = sort.key === "name" ? b.name : typeLabels[b.type];
+      const result = first.localeCompare(second);
+      return sort.direction === "asc" ? result : -result;
+    });
+  }, [categories, sort.direction, sort.key]);
+
+  function updateSort(key: CategorySortKey) {
+    setSort((current) => ({
+      key,
+      direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
+    }));
+  }
+
   return (
     <section className="card table-wrap">
       <h2>Categorias</h2>
       <table className="responsive-table categories-table">
         <thead>
           <tr>
-            <th>Nombre</th>
-            <th>Tipo</th>
+            <th><SortButton active={sort.key === "name"} direction={sort.direction} onClick={() => updateSort("name")}>Nombre</SortButton></th>
+            <th><SortButton active={sort.key === "type"} direction={sort.direction} onClick={() => updateSort("type")}>Tipo</SortButton></th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {categories.map((category) => (
+          {sortedCategories.map((category) => (
             <tr key={category.id}>
               <td data-label="Nombre">{category.name}</td>
               <td data-label="Tipo">

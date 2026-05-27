@@ -1,5 +1,6 @@
 import { AccountModal } from "@/components/account-modal";
 import { AccountTable } from "@/components/account-table";
+import { AccountsBalanceChart } from "@/components/accounts-balance-chart";
 import { AppNav } from "@/components/app-nav";
 import { getFinanceData } from "@/lib/data";
 import { calculateBalances, formatMoney } from "@/lib/finance";
@@ -40,6 +41,7 @@ export default async function AccountsPage() {
             <strong>{excludedBalances.length}</strong>
           </div>
         </section>
+        <AccountsBalanceChart accounts={balances} />
         <AccountTable accounts={balances} />
       </div>
     </main>
