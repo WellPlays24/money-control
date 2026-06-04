@@ -803,23 +803,42 @@ table {
 }
 
 .transactions-table {
+  min-width: 1280px;
   table-layout: fixed;
 }
 
+.transactions-table th,
+.transactions-table td {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .transactions-table .date-cell {
-  width: 145px;
+  width: 150px;
+}
+
+.transactions-table th:nth-child(2),
+.transactions-table td:nth-child(2) {
+  width: 90px;
+}
+
+.transactions-table th:nth-child(3),
+.transactions-table td:nth-child(3),
+.transactions-table th:nth-child(4),
+.transactions-table td:nth-child(4) {
+  width: 120px;
 }
 
 .transactions-table .category-cell {
   overflow-wrap: anywhere;
   white-space: nowrap;
-  width: 170px;
+  width: 160px;
 }
 
 .transactions-table .description-cell {
   overflow-wrap: anywhere;
   white-space: normal;
-  width: 30%;
+  width: 280px;
 }
 
 .transactions-table .description-text {
@@ -833,11 +852,18 @@ table {
 .transactions-table .amount-cell {
   font-weight: 800;
   text-align: right;
-  width: 96px;
+  width: 110px;
+}
+
+.transactions-table .balance-cell {
+  color: var(--text);
+  font-weight: 800;
+  text-align: right;
+  width: 120px;
 }
 
 .transactions-table .actions-cell {
-  width: 88px;
+  width: 92px;
 }
 
 .transactions-table .actions {
@@ -1104,6 +1130,10 @@ th {
     padding: 10px;
   }
 
+  .transactions-table {
+    min-width: 0;
+  }
+
   .responsive-table td {
     align-items: stretch;
     border-bottom: 0;
@@ -1114,8 +1144,10 @@ th {
   }
 
   .transactions-table .date-cell,
+  .transactions-table .category-cell,
   .transactions-table .description-cell,
   .transactions-table .amount-cell,
+  .transactions-table .balance-cell,
   .transactions-table .actions-cell {
     text-align: left;
     width: auto;

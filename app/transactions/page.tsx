@@ -149,7 +149,9 @@ export default async function TransactionsPage({
         ) : null}
         <TransactionsTable
           accounts={accounts}
+          balanceTransactions={transactions}
           categories={categories}
+          focusAccountId={accountId || undefined}
           showDestination={showDestination}
           transactions={filteredTransactions}
         />

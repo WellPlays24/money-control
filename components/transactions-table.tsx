@@ -14,7 +14,52 @@ const typeLabels = {
 };
 
 type SortDirection = "asc" | "desc";
-type TransactionSortKey = "date" | "type" | "account" | "destination" | "category" | "description" | "amount";
+type TransactionSortKey = "date" | "type" | "account" | "destination" | "category" | "description" | "amount" | "balance";
+
+function getTransactionSortValue(transaction: Transaction) {
+  return `${transaction.date} ${transaction.time} ${transaction.created_at} ${transaction.id}`;
+}
+
+function getRunningBalances(
+  accounts: Account[],
+  transactions: Transaction[],
+  focusAccountId?: string,
+) {
+  const balances = new Map(accounts.map((account) => [account.id, account.initial_balance]));
+  const transactionBalances = new Map<string, number>();
+
+  for (const transaction of transactions.slice().sort((a, b) => getTransactionSortValue(a).localeCompare(getTransactionSortValue(b)))) {
+    const sourceBalance = balances.get(transaction.account_id) ?? 0;
+
+    if (transaction.type === "income") {
+      balances.set(transaction.account_id, sourceBalance + transaction.amount);
+    }
+
+    if (transaction.type === "expense") {
+      balances.set(transaction.account_id, sourceBalance - transaction.amount);
+    }
+
+    if (transaction.type === "transfer") {
+      balances.set(transaction.account_id, sourceBalance - transaction.amount);
+
+      if (transaction.destination_account_id) {
+        balances.set(
+          transaction.destination_account_id,
+          (balances.get(transaction.destination_account_id) ?? 0) + transaction.amount,
+        );
+      }
+    }
+
+    const balanceAccountId = focusAccountId && (
+      transaction.account_id === focusAccountId || transaction.destination_account_id === focusAccountId
+    )
+      ? focusAccountId
+      : transaction.account_id;
+    transactionBalances.set(transaction.id, balances.get(balanceAccountId) ?? 0);
+  }
+
+  return transactionBalances;
+}
 
 function SortButton({
   active,
@@ -37,16 +82,24 @@ function SortButton({
 
 export function TransactionsTable({
   accounts,
+  balanceTransactions,
   categories = [],
+  focusAccountId,
   showDestination = true,
   transactions,
 }: {
   accounts: Account[];
+  balanceTransactions?: Transaction[];
   categories?: Category[];
+  focusAccountId?: string;
   showDestination?: boolean;
   transactions: Transaction[];
 }) {
   const accountNames = useMemo(() => new Map(accounts.map((account) => [account.id, account.name])), [accounts]);
+  const transactionBalances = useMemo(
+    () => getRunningBalances(accounts, balanceTransactions ?? transactions, focusAccountId),
+    [accounts, balanceTransactions, focusAccountId, transactions],
+  );
   const [sort, setSort] = useState<{ key: TransactionSortKey; direction: SortDirection }>({
     key: "date",
     direction: "desc",
@@ -60,6 +113,7 @@ export function TransactionsTable({
         if (sort.key === "destination") return transaction.destination_account_id ? accountNames.get(transaction.destination_account_id) ?? "" : "";
         if (sort.key === "category") return transaction.category;
         if (sort.key === "description") return transaction.description ?? "";
+        if (sort.key === "balance") return transactionBalances.get(transaction.id) ?? 0;
         return transaction.amount;
       };
       const first = getValue(a);
@@ -69,7 +123,7 @@ export function TransactionsTable({
         : String(first).localeCompare(String(second));
       return sort.direction === "asc" ? result : -result;
     });
-  }, [accountNames, sort.direction, sort.key, transactions]);
+  }, [accountNames, sort.direction, sort.key, transactionBalances, transactions]);
 
   function updateSort(key: TransactionSortKey) {
     setSort((current) => ({
@@ -91,6 +145,7 @@ export function TransactionsTable({
             <th className="category-cell"><SortButton active={sort.key === "category"} direction={sort.direction} onClick={() => updateSort("category")}>Categoria</SortButton></th>
             <th className="description-cell"><SortButton active={sort.key === "description"} direction={sort.direction} onClick={() => updateSort("description")}>Descripcion</SortButton></th>
             <th className="amount-cell"><SortButton active={sort.key === "amount"} direction={sort.direction} onClick={() => updateSort("amount")}>Monto</SortButton></th>
+            <th className="balance-cell"><SortButton active={sort.key === "balance"} direction={sort.direction} onClick={() => updateSort("balance")}>Saldo</SortButton></th>
             <th className="actions-cell">Acciones</th>
           </tr>
         </thead>
@@ -113,6 +168,9 @@ export function TransactionsTable({
               </td>
               <td className={`amount-cell ${transaction.type}-amount`} data-label="Monto">
                 {formatMoney(transaction.amount)}
+              </td>
+              <td className="balance-cell" data-label="Saldo">
+                {formatMoney(transactionBalances.get(transaction.id) ?? 0)}
               </td>
               <td className="actions-cell" data-label="Acciones">
                 <div className="actions">
@@ -143,7 +201,7 @@ export function TransactionsTable({
           ))}
           {transactions.length === 0 ? (
             <tr>
-              <td colSpan={showDestination ? 8 : 7}>Todavia no hay movimientos.</td>
+              <td colSpan={showDestination ? 9 : 8}>Todavia no hay movimientos.</td>
             </tr>
           ) : null}
         </tbody>
