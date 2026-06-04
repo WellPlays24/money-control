@@ -7,6 +7,8 @@ import { TransactionEditModal } from "@/components/transaction-edit-modal";
 import { formatMoney, formatTransactionDateTime } from "@/lib/finance";
 import type { Account, Category, Transaction } from "@/lib/types";
 
+const pageSize = 10;
+
 const typeLabels = {
   income: "Ingreso",
   expense: "Egreso",
@@ -104,6 +106,7 @@ export function TransactionsTable({
     key: "date",
     direction: "desc",
   });
+  const [page, setPage] = useState(1);
   const sortedTransactions = useMemo(() => {
     return transactions.slice().sort((a, b) => {
       const getValue = (transaction: Transaction) => {
@@ -124,12 +127,16 @@ export function TransactionsTable({
       return sort.direction === "asc" ? result : -result;
     });
   }, [accountNames, sort.direction, sort.key, transactionBalances, transactions]);
+  const pageCount = Math.max(1, Math.ceil(sortedTransactions.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const paginatedTransactions = sortedTransactions.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   function updateSort(key: TransactionSortKey) {
     setSort((current) => ({
       key,
       direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
     }));
+    setPage(1);
   }
 
   return (
@@ -150,7 +157,7 @@ export function TransactionsTable({
           </tr>
         </thead>
         <tbody>
-          {sortedTransactions.map((transaction) => (
+          {paginatedTransactions.map((transaction) => (
             <tr key={transaction.id}>
               <td className="date-cell" data-label="Fecha y hora">{formatTransactionDateTime(transaction)}</td>
               <td data-label="Tipo">{typeLabels[transaction.type]}</td>
@@ -206,6 +213,31 @@ export function TransactionsTable({
           ) : null}
         </tbody>
       </table>
+      {sortedTransactions.length > pageSize ? (
+        <div className="table-pagination" aria-label="Paginacion de movimientos">
+          <span>
+            Pagina {currentPage} de {pageCount}
+          </span>
+          <div className="pagination-actions">
+            <button
+              className="ghost-button pagination-button"
+              disabled={currentPage === 1}
+              onClick={() => setPage((value) => Math.max(1, value - 1))}
+              type="button"
+            >
+              Anterior
+            </button>
+            <button
+              className="ghost-button pagination-button"
+              disabled={currentPage === pageCount}
+              onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+              type="button"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
